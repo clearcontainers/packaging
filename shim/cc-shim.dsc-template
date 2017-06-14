@@ -1,0 +1,19 @@
+Format: 3.0 (quilt)
+Source: cc-shim
+Version: @VERSION@
+Section: devel
+Priority: optional
+Maintainer: clearlinux.org team <dev@lists.clearlinux.org>
+Standards-Version: 3.9.6
+Build-Depends: debhelper (>= 9), git, ca-certificates, dh-modaliases, execstack, devscripts, dh-make
+Homepage: https://clearlinux.org/features/clear-containers
+Debtransform-Tar: cc-shim-@VERSION_DEB_TRANSFORM@+git.@HASH_TAG@.tar.gz
+DEBTRANSFORM-RELEASE: 1
+
+Package: cc-shim
+Architecture: amd64
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${perl:Depends}
+Description:
+ cc-shim is a process spawned by the Intel VT-x secured Clear Containers 3.0 runtime per container workload.
+ The runtime provides the pid of the cc-shim process to containerd-shim on OCI create command.
+

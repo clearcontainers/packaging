@@ -1,0 +1,88 @@
+%global PREFIX /usr/
+%global BINDIR %{PREFIX}/bin
+%global DOMAIN github.com
+%global ORG clearcontainers
+%global PROJECT proxy
+%global IMPORTNAME %{DOMAIN}/%{ORG}/%{PROJECT}
+%global GO_VERSION @GO_VERSION@
+
+%undefine _missing_build_ids_terminate_build
+Name:      cc-proxy
+Version:   @VERSION@
+Release:   0
+Source0:   %{name}-%{version}.tar.gz
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Summary  : No detailed summary available
+Group    : Development/Tools
+License  : Apache-2.0 GPL-2.0
+
+Requires: cc-proxy-bin
+Requires: cc-proxy-config
+
+Requires:  clear-containers-image
+Requires:  clear-containers-selinux
+Requires:  qemu-lite
+Requires:  linux-container
+
+%description
+.. contents::
+.. sectnum::
+``cc-proxy``
+===================
+Overview
+--------
+
+%global debug_package %{nil}
+%define _unpackaged_files_terminate_build 0
+
+%package bin
+Summary: bin components for the cc-oci-proxy package.
+Group: Binaries
+Requires: cc-proxy-config
+
+%description bin
+bin components for the cc-oci-proxy package.
+
+%package config
+Summary: config components for the cc-oci-proxy package.
+Group: Default
+
+%description config
+config components for the cc-oci-proxy package.
+
+%prep
+mkdir local
+tar -C local -xzf ../SOURCES/go%{GO_VERSION}.linux-amd64.tar.gz
+
+%setup -q
+
+%build
+export GOROOT=$HOME/rpmbuild/BUILD/local/go
+export PATH=$PATH:$HOME/rpmbuild/BUILD/local/go/bin
+export GOPATH=$HOME/rpmbuild/BUILD/go/
+export COMMIT=%{version}
+
+mkdir -p $HOME/rpmbuild/BUILD/go/src/%{DOMAIN}/%{ORG}
+ln -s %{_builddir}/%{name}-%{version} $HOME/rpmbuild/BUILD/go/src/%{IMPORTNAME}
+cd $HOME/rpmbuild/BUILD/go/src/%{IMPORTNAME}
+make
+
+%check
+export http_proxy=http://127.0.0.1:9/
+export https_proxy=http://127.0.0.1:9/
+export no_proxy=localhost
+
+%install
+make install DESTDIR=%{buildroot}
+
+%files
+%defattr(-,root,root,-)
+
+%files bin
+%defattr(-,root,root,-)
+/usr/libexec/clear-containers/cc-proxy
+
+%files config
+%defattr(-,root,root,-)
+/usr/lib/systemd/system/cc-proxy.service
+/usr/lib/systemd/system/cc-proxy.socket

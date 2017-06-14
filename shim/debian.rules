@@ -1,0 +1,12 @@
+#!/usr/bin/make -f
+export DEB_BUILD_OPTIONS=nocheck
+%:
+	dh $@
+
+override_dh_auto_build:
+	./autogen.sh
+	make
+
+override_dh_auto_install:
+	mkdir -p debian/cc-shim
+	make install DESTDIR=`pwd`/debian/cc-shim
