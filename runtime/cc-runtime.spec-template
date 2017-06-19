@@ -1,0 +1,83 @@
+%global PREFIX /usr/
+%global BINDIR %{PREFIX}/bin
+%global DOMAIN github.com
+%global ORG clearcontainers
+%global PROJECT runtime
+%global IMPORTNAME %{DOMAIN}/%{ORG}/%{PROJECT}
+%global GO_VERSION @GO_VERSION@
+
+%undefine _missing_build_ids_terminate_build
+Name:      cc-runtime
+Version:   @VERSION@
+Release:   0
+Source0:   %{name}-%{version}.tar.gz
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Summary  : No detailed summary available
+Group    : Development/Tools
+License  : Apache-2.0 GPL-2.0
+
+Requires: cc-runtime-bin
+Requires: cc-runtime-config
+Requires: qemu-lite
+Requires: clear-containers-image
+Requires: linux-container
+
+
+%description
+.. contents::
+.. sectnum::
+``cc-runtime``
+===================
+Overview
+--------
+
+%package bin
+Summary: bin components for the cc-oci-runtime package.
+Group: Binaries
+Requires: cc-runtime-config
+
+%description bin
+bin components for the cc-oci-runtime package.
+
+%package config
+Summary: config components for the cc-oci-runtime package.
+Group: Default
+
+%description config
+config components for the cc-oci-runtime package.
+
+%prep
+mkdir local
+tar -C local -xzf ../SOURCES/go%{GO_VERSION}.linux-amd64.tar.gz
+
+%setup -q
+
+%build
+export GOROOT=$HOME/rpmbuild/BUILD/local/go
+export PATH=$PATH:$HOME/rpmbuild/BUILD/local/go/bin
+export GOPATH=$HOME/rpmbuild/BUILD/go/
+export COMMIT=%{version}
+
+mkdir -p $HOME/rpmbuild/BUILD/go/src/%{DOMAIN}/%{ORG}
+ln -s $HOME/rpmbuild/BUILD/cc-runtime-%{version} $HOME/rpmbuild/BUILD/go/src/%{IMPORTNAME}
+cd $HOME/rpmbuild/BUILD/go/src/%{IMPORTNAME}
+make DESTDIR=%{buildroot} PREFIX=%{PREFIX}
+
+%check
+export http_proxy=http://127.0.0.1:9/
+export https_proxy=http://127.0.0.1:9/
+export no_proxy=localhost
+
+%install
+make install DESTDIR=%{buildroot} PREFIX=%{PREFIX}
+
+%files
+%defattr(-,root,root,-)
+
+%files bin
+%defattr(-,root,root,-)
+/usr/bin/cc-runtime
+
+%files config
+%defattr(-,root,root,-)
+/usr/etc/clear-containers/configuration.toml

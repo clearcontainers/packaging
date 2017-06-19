@@ -1,0 +1,8 @@
+cc_proxy_hash=8b2978d044f5efce201d5f2977fcc51b89e742c0
+cc_runtime_hash=af51d34c5269acd4a3c226b463911def6cb3271f
+cc_shim_hash=9fe9082178dfc936c1a0604149b0a5b872e52ad7
+virtcontainers_hash=93aa8226e6fa7e9bb2d553b571209f4f94e96348
+cc_proxy_version=3.0.0-alpha.0
+cc_runtime_version=3.0.0-alpha.0
+cc_shim_version=3.0.0-alpha.0
+virtcontainers_version=0.7.0

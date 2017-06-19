@@ -1,0 +1,36 @@
+From bd9ce83f122117b3b2654203e6450f684cd28c2c Mon Sep 17 00:00:00 2001
+From: Erick Cardona <erick.cardona.ruiz@intel.com>
+Date: Thu, 15 Jun 2017 08:54:37 -0500
+Subject: [PATCH] Disable systemd check
+
+When building in OBS, there is no systemd in the build environment.
+This leads to not create the .socket and .service files while
+building the project. This patch comment out the systemd if
+statement in the Makefile.
+
+Signed-off-by: Erick Cardona <erick.cardona.ruiz@intel.com>
+---
+ Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 64b262c..0310843 100644
+--- a/Makefile
++++ b/Makefile
+@@ -13,11 +13,11 @@ PROXY_SOCKET := $(LOCALSTATEDIR)/run/clear-containers/proxy.sock
+ 
+ HAVE_SYSTEMD := $(shell pkg-config --exists systemd 2>/dev/null && echo 'yes')
+ 
+-ifeq ($(HAVE_SYSTEMD),yes)
++#ifeq ($(HAVE_SYSTEMD),yes)
+ UNIT_DIR := $(shell pkg-config --variable=systemdsystemunitdir systemd)
+ UNIT_FILES = cc-proxy.service cc-proxy.socket
+ GENERATED_FILES += $(UNIT_FILES)
+-endif
++#endif
+ 
+ #
+ # Pretty printing
+-- 
+2.7.4
+
