@@ -22,7 +22,6 @@ Requires: qemu-lite
 Requires: clear-containers-image
 Requires: linux-container
 
-
 %description
 .. contents::
 .. sectnum::
@@ -69,7 +68,13 @@ export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost
 
 %install
-make install DESTDIR=%{buildroot} PREFIX=%{PREFIX}
+export GOROOT=$HOME/rpmbuild/BUILD/local/go
+export PATH=$PATH:$HOME/rpmbuild/BUILD/local/go/bin
+export GOPATH=$HOME/rpmbuild/BUILD/go/
+export COMMIT=%{version}
+
+cd $HOME/rpmbuild/BUILD/go/src/%{IMPORTNAME}
+make install DESTDIR=%{buildroot} PREFIX=%{PREFIX} SYSCONFDIR=/etc
 
 %files
 %defattr(-,root,root,-)
@@ -80,4 +85,4 @@ make install DESTDIR=%{buildroot} PREFIX=%{PREFIX}
 
 %files config
 %defattr(-,root,root,-)
-/usr/etc/clear-containers/configuration.toml
+/etc/clear-containers/configuration.toml
