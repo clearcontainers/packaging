@@ -19,11 +19,6 @@ License  : Apache-2.0 GPL-2.0
 Requires: cc-proxy-bin
 Requires: cc-proxy-config
 
-Requires:  clear-containers-image
-Requires:  clear-containers-selinux
-Requires:  qemu-lite
-Requires:  linux-container
-
 %description
 .. contents::
 .. sectnum::

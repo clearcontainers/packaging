@@ -18,9 +18,11 @@ License  : Apache-2.0 GPL-2.0
 
 Requires: cc-runtime-bin
 Requires: cc-runtime-config
-Requires: qemu-lite
+%{!?el7:Requires: qemu-lite }
 Requires: clear-containers-image
 Requires: linux-container
+Requires: cc-proxy
+Requires: cc-shim
 
 %description
 .. contents::
