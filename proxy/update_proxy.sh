@@ -20,6 +20,13 @@ short_hashtag="${hash_tag:0:7}"
 
 OBS_PUSH=${OBS_PUSH:-false}
 OBS_PROXY_REPO=${OBS_PROXY_REPO:-home:clearcontainers:clear-containers-3-staging/cc-proxy}
+: ${OBS_APIURL:=""}
+
+if [ $OBS_APIURL != '' ]; then
+    APIURL="-A ${OBS_APIURL}"
+else
+    APIURL=""
+fi
 
 GO_VERSION=${GO_VERSION:-"1.8.3"}
 
@@ -50,7 +57,7 @@ if [ "$OBS_PUSH" = true ]
 then
     temp=$(basename $0)
     TMPDIR=$(mktemp -d -t ${temp}.XXXXXXXXXXX) || exit 1
-    osc co "$OBS_PROXY_REPO" -o $TMPDIR
+    osc $APIURL co "$OBS_PROXY_REPO" -o $TMPDIR
     mv cc-proxy.spec \
        cc-proxy.dsc \
        debian.control \
@@ -68,6 +75,6 @@ then
         rm go*.tar.gz
         curl -OkL https://storage.googleapis.com/golang/go$GO_VERSION.linux-amd64.tar.gz
     fi
-    osc addremove
-    osc commit -m "Update cc-proxy $VERSION: ${hash_tag:0:7}"
+    osc $APIURL addremove
+    osc $APIURL commit -m "Update cc-proxy $VERSION: ${hash_tag:0:7}"
 fi

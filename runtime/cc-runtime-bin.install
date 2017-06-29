@@ -1,0 +1,2 @@
+cc-runtime /usr/bin
+pause/pause /var/lib/clear-containers/runtime/bundles/pause_bundle/bin/
