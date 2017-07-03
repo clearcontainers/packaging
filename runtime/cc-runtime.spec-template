@@ -7,6 +7,7 @@
 %global GO_VERSION @GO_VERSION@
 
 %undefine _missing_build_ids_terminate_build
+%define  debug_package %{nil}
 Name:      cc-runtime
 Version:   @VERSION@
 Release:   0
@@ -15,7 +16,11 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : Apache-2.0 GPL-2.0
+Patch0   : build-Add-containers-virtcontainers-pause-binary.patch
 
+BuildRequires: gcc
+BuildRequires: glibc-static
+BuildRequires: git
 Requires: cc-runtime-bin
 Requires: cc-runtime-config
 %{!?el7:Requires: qemu-lite }
@@ -52,6 +57,7 @@ mkdir local
 tar -C local -xzf ../SOURCES/go%{GO_VERSION}.linux-amd64.tar.gz
 
 %setup -q
+%autosetup -S git
 
 %build
 export GOROOT=$HOME/rpmbuild/BUILD/local/go
@@ -62,7 +68,7 @@ export COMMIT=%{version}
 mkdir -p $HOME/rpmbuild/BUILD/go/src/%{DOMAIN}/%{ORG}
 ln -s $HOME/rpmbuild/BUILD/cc-runtime-%{version} $HOME/rpmbuild/BUILD/go/src/%{IMPORTNAME}
 cd $HOME/rpmbuild/BUILD/go/src/%{IMPORTNAME}
-make DESTDIR=%{buildroot} PREFIX=%{PREFIX}
+make DESTCONFIG=/etc/clear-containers/configuration.toml PREFIX=/usr SYSCONFDIR=/etc LOCALSTATEDIR=/var SHAREDIR=/usr/share
 
 %check
 export http_proxy=http://127.0.0.1:9/
@@ -76,7 +82,7 @@ export GOPATH=$HOME/rpmbuild/BUILD/go/
 export COMMIT=%{version}
 
 cd $HOME/rpmbuild/BUILD/go/src/%{IMPORTNAME}
-make install DESTDIR=%{buildroot} PREFIX=%{PREFIX} SYSCONFDIR=/etc
+make install DESTDIR=%{buildroot} PREFIX=/usr SYSCONFDIR=/etc LOCALSTATEDIR=/var SHAREDIR=/usr/share
 
 %files
 %defattr(-,root,root,-)
@@ -84,6 +90,7 @@ make install DESTDIR=%{buildroot} PREFIX=%{PREFIX} SYSCONFDIR=/etc
 %files bin
 %defattr(-,root,root,-)
 /usr/bin/cc-runtime
+/var/lib/clear-containers/runtime/bundles/pause_bundle/bin/pause
 
 %files config
 %defattr(-,root,root,-)

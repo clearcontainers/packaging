@@ -20,6 +20,14 @@ short_hashtag="${hash_tag:0:7}"
 
 OBS_PUSH=${OBS_PUSH:-false}
 OBS_RUNTIME_REPO=${OBS_RUNTIME_REPO:-home:clearcontainers:clear-containers-3-staging/cc-runtime}
+: ${OBS_APIURL:=""}
+
+if [ $OBS_APIURL != "" ]; then
+    APIURL="-A ${OBS_APIURL}"
+else
+    APIURL=""
+fi
+
 
 GO_VERSION=${GO_VERSION:-"1.8.3"}
 
@@ -51,7 +59,7 @@ if [ "$OBS_PUSH" = true ]
 then
     temp=$(basename $0)
     TMPDIR=$(mktemp -d -t ${temp}.XXXXXXXXXXX) || exit 1
-    osc co "$OBS_RUNTIME_REPO" -o $TMPDIR
+    osc $APIURL co "$OBS_RUNTIME_REPO" -o $TMPDIR
     mv cc-runtime.spec \
        cc-runtime.dsc \
        debian.control \
@@ -60,6 +68,9 @@ then
     cp debian.changelog \
         debian.compat \
         debian.rules \
+        cc-runtime-bin.install \
+        cc-runtime-config.install \
+        *.patch \
         $TMPDIR
     cd $TMPDIR
 
@@ -67,6 +78,6 @@ then
         rm go*.tar.gz
         curl -OkL https://storage.googleapis.com/golang/go$GO_VERSION.linux-amd64.tar.gz
     fi
-    osc addremove
-    osc commit -m "Update cc-runtime $VERSION: ${hash_tag:0:7}"
+    osc $APIURL addremove
+    osc $APIURL commit -m "Update cc-runtime $VERSION: ${hash_tag:0:7}"
 fi

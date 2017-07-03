@@ -20,6 +20,13 @@ short_hashtag="${hash_tag:0:7}"
 
 OBS_PUSH=${OBS_PUSH:-false}
 OBS_SHIM_REPO=${OBS_SHIM_REPO:-home:clearcontainers:clear-containers-3-staging/cc-shim}
+: ${OBS_APIURL:=""}
+
+if [ $OBS_APIURL != '' ]; then
+    APIURL="-A ${OBS_APIURL}"
+else
+    APIURL=""
+fi
 
 GO_VERSION=${GO_VERSION:-"1.8.3"}
 
@@ -51,7 +58,7 @@ if [ "$OBS_PUSH" = true ]
 then
     temp=$(basename $0)
     TMPDIR=$(mktemp -d -t ${temp}.XXXXXXXXXXX) || exit 1
-    osc co "$OBS_SHIM_REPO" -o $TMPDIR
+    osc $APIURL co "$OBS_SHIM_REPO" -o $TMPDIR
     mv cc-shim.spec \
         cc-shim.dsc \
         _service \
@@ -62,6 +69,6 @@ then
         debian.compat \
         $TMPDIR
     cd $TMPDIR
-    osc addremove
-    osc commit -m "Update cc-shim $VERSION: ${hash_tag:0:7}"
+    osc $APIURL addremove
+    osc $APIURL commit -m "Update cc-shim $VERSION: ${hash_tag:0:7}"
 fi
