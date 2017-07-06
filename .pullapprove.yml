@@ -33,8 +33,10 @@ groups:
   approvers:
     required: 1
     users:
-      - gorozco1
+      - dlespiau
       - erick0z
+      - gorozco1
+      - grahamwhaley
       - jcvenegas
       - mcastelino
       - sameo
