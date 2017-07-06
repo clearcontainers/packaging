@@ -16,7 +16,6 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : Apache-2.0 GPL-2.0
-Patch0   : build-Add-containers-virtcontainers-pause-binary.patch
 
 BuildRequires: gcc
 BuildRequires: glibc-static

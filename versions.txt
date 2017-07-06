@@ -1,9 +1,9 @@
-cc_proxy_hash=7cb0341712a90d7286fa1730162907456fffda0f
-cc_runtime_hash=f24c2b04f2f8bb76d879564a0a9398ba7d99c4a2
-cc_shim_hash=9d1a3ee050372eb5d4d61fc6011eb698c71a84b2
-cc_proxy_version=3.0.0-alpha.2
-cc_runtime_version=3.0.0-alpha.2
-cc_shim_version=3.0.0-alpha.2
+cc_proxy_hash=b73e4a37c3ff01f087ee5efaf1409380810ea4ce
+cc_runtime_hash=6b912075c1febda818d7d2e80f39b8e284095ca3
+cc_shim_hash=531004e5c945307d7db895a81f768c6c0aa81eb8
+cc_proxy_version=3.0.0-alpha.3
+cc_runtime_version=3.0.0-alpha.3
+cc_shim_version=3.0.0-alpha.3
 clear_vm_kernel_version=4.9.34-75
 clear_vm_image_version=16160
 qemu_lite_version=741f430a960b5b67745670e8270db91aeb083c5f
