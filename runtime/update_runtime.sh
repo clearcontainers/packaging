@@ -58,7 +58,7 @@ sed "s/@VERSION@/$VERSION/g;" _service-template > _service
 if [ "$OBS_PUSH" = true ]
 then
     temp=$(basename $0)
-    TMPDIR=$(mktemp -d -t ${temp}.XXXXXXXXXXX) || exit 1
+    TMPDIR=$(mktemp -d -u -t ${temp}.XXXXXXXXXXX) || exit 1
     osc $APIURL co "$OBS_RUNTIME_REPO" -o $TMPDIR
     mv cc-runtime.spec \
        cc-runtime.dsc \
@@ -70,7 +70,6 @@ then
         debian.rules \
         cc-runtime-bin.install \
         cc-runtime-config.install \
-        *.patch \
         $TMPDIR
     cd $TMPDIR
 
