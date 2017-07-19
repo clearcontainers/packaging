@@ -49,9 +49,30 @@ function changelog_update {
 }
 changelog_update $VERSION
 
-sed -e "s/@VERSION@/$VERSION/g;" -e "s/@GO_VERSION@/$GO_VERSION/g;" cc-runtime.spec-template > cc-runtime.spec
-sed -e "s/@VERSION_DEB_TRANSFORM@/$VERSION_DEB_TRANSFORM/g;" -e "s/@HASH_TAG@/$short_hashtag/g;"  cc-runtime.dsc-template > cc-runtime.dsc
-sed -e "s/@VERSION_DEB_TRANSFORM@/$VERSION_DEB_TRANSFORM/g;" -e "s/@HASH_TAG@/$short_hashtag/g;" debian.control-template > debian.control
+sed -e "s/@VERSION@/$VERSION/" \
+    -e "s/@GO_VERSION@/$GO_VERSION/g;" \
+    -e "s/@cc_proxy_version@/$proxy_obs_fedora_version/" \
+    -e "s/@cc_shim_version@/$shim_obs_fedora_version/" \
+    -e "s/@qemu_lite_version@/$qemu_lite_obs_fedora_version/" \
+    -e "s/@cc_image_version@/$image_obs_fedora_version/" \
+    -e "s/@linux_container_version@/$linux_container_obs_fedora_version/" cc-runtime.spec-template > cc-runtime.spec
+
+sed -e "s/@VERSION_DEB_TRANSFORM@/$VERSION_DEB_TRANSFORM/g;" \
+    -e "s/@HASH_TAG@/$short_hashtag/g;" \
+    -e "s/@cc_proxy_version@/$proxy_obs_ubuntu_version/" \
+    -e "s/@cc_shim_version@/$shim_obs_ubuntu_version/" \
+    -e "s/@qemu_lite_version@/$qemu_lite_obs_ubuntu_version/" \
+    -e "s/@cc_image_version@/$image_obs_ubuntu_version/" \
+    -e "s/@linux_container_version@/$linux_container_obs_ubuntu_version/" cc-runtime.dsc-template > cc-runtime.dsc
+
+sed -e "s/@VERSION_DEB_TRANSFORM@/$VERSION_DEB_TRANSFORM/g;" \
+    -e "s/@HASH_TAG@/$short_hashtag/g;" \
+    -e "s/@cc_proxy_version@/$proxy_obs_ubuntu_version/" \
+    -e "s/@cc_shim_version@/$shim_obs_ubuntu_version/" \
+    -e "s/@qemu_lite_version@/$qemu_lite_obs_ubuntu_version/" \
+    -e "s/@cc_image_version@/$image_obs_ubuntu_version/" \
+    -e "s/@linux_container_version@/$linux_container_obs_ubuntu_version/" debian.control-template > debian.control
+
 sed "s/@VERSION@/$VERSION/g;" _service-template > _service
 
 # Update and package OBS

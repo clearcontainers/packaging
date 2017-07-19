@@ -23,10 +23,10 @@ BuildRequires: git
 Requires: cc-runtime-bin
 Requires: cc-runtime-config
 %{!?el7:Requires: qemu-lite }
-Requires: clear-containers-image
-Requires: linux-container
-Requires: cc-proxy
-Requires: cc-shim
+Requires: clear-containers-image >= @cc_image_version@
+Requires: linux-container >= @linux_container_version@
+Requires: cc-proxy >= @cc_proxy_version@
+Requires: cc-shim >= @cc_shim_version@
 
 %description
 .. contents::

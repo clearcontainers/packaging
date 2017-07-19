@@ -1,9 +1,29 @@
 cc_proxy_hash=b73e4a37c3ff01f087ee5efaf1409380810ea4ce
-cc_runtime_hash=6b912075c1febda818d7d2e80f39b8e284095ca3
-cc_shim_hash=531004e5c945307d7db895a81f768c6c0aa81eb8
+cc_runtime_hash=7e3b6bf6634b494e720110f52bb7fbc9e32023a3
+cc_shim_hash=ab14648926c47d7ebb02e0adba3e95ffbd20765e
 cc_proxy_version=3.0.0-alpha.3
-cc_runtime_version=3.0.0-alpha.3
-cc_shim_version=3.0.0-alpha.3
+cc_runtime_version=3.0.0-alpha.4
+cc_shim_version=3.0.0-alpha.4
 clear_vm_kernel_version=4.9.35-76
 clear_vm_image_version=16180
 qemu_lite_version=741f430a960b5b67745670e8270db91aeb083c5f
+
+# OBS package versions
+# Versions matches the ones in the OBS stable release.
+# When making a new release of the runtime, this file
+# should contain the new versions.
+
+# Fedora
+proxy_obs_fedora_version=3.0.0alpha.3+git.b73e4a3-3.1
+shim_obs_fedora_version=3.0.0alpha.4+git.ab14648-2.1
+image_obs_fedora_version=16180-30.1
+selinux_obs_fedora_version=0.1-3.1
+linux_container_obs_fedora_version=4.9.35-66.1
+qemu_lite_obs_fedora_version=2.7.1+git.741f430a96-6.1
+
+# Ubuntu
+proxy_obs_ubuntu_version=3.0.0alpha.3+git.b73e4a3-0+3.1
+shim_obs_ubuntu_version=3.0.0alpha.4+git.ab14648-0+2.1
+image_obs_ubuntu_version=16180-22
+linux_container_obs_ubuntu_version=4.9.35-62
+qemu_lite_obs_ubuntu_version=2.7.1+git.741f430a96-6.1

@@ -12,13 +12,15 @@ DEBTRANSFORM-RELEASE: 1
 
 Package: cc-runtime
 Architecture: amd64
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${perl:Depends}, cc-runtime-bin, cc-runtime-config
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${perl:Depends}, cc-runtime-bin, cc-runtime-config, qemu-lite (>= @qemu_lite_version@),
+                          clear-containers-image (>= @cc_image_version@), linux-container (>= @linux_container_version@),
+			  cc-proxy (>= @cc_proxy_version@), cc-shim (>= @cc_shim_version@)
 Description:
  An Open Containers Initiative (OCI) "runtime" that launches an Intel VT-x secured Clear Containers 3.0 hypervisor, rather than a standard Linux container.
 
 Package: cc-runtime-bin
 Architecture: amd64
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${perl:Depends}, qemu-lite, clear-containers-image, linux-container, cc-proxy, cc-shim
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${perl:Depends}
 Description:
  An Open Containers Initiative (OCI) "runtime" that launches an Intel VT-x secured Clear Containers 3.0 hypervisor, rather than a standard Linux container.
  This package contain the cc-runtime and the pause binaries.
