@@ -1,3 +1,9 @@
+clear-containers-image (16670-23) stable; urgency=medium
+
+  * Update clear-containers-image 16670.
+
+ -- Jose Carlos Venegas Munoz <jose.carlos.venegas.munoz@intel.com>  Thu, 27 Jul 2017 16:29:48 -0500
+
 clear-containers-image (16670-22) stable; urgency=medium
 
   * Update clear-containers-image 16670.
