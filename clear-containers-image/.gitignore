@@ -1,3 +1,4 @@
 clear-containers-image_*
 clear-containers-image.spec
 clear-*-containers.img.xz
+obs_working_directory/debian/rules
