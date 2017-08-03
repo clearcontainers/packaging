@@ -19,6 +19,11 @@ License  : Apache-2.0 GPL-2.0
 Requires: cc-proxy-bin
 Requires: cc-proxy-config
 
+%if 0%{?fedora} >= 20 || 0%{?centos} >= 7 || 0%{?rhel} >= 7 || 0%{?oraclelinux} >= 7
+Requires: clear-containers-selinux
+%endif
+
+
 %description
 .. contents::
 .. sectnum::
