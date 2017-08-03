@@ -1,0 +1,11 @@
+qemu-cc (2.9.0) stable; urgency=medium
+
+  * Update qemu-cc 2.9.0 
+
+ -- Erick Cardona <erick.cardona.ruiz@intel.com>  Tue, 14 Nov 2017 17:36:57 +0000
+
+qemu-cc (2.9.0) stable; urgency=medium
+
+  * Initial version introducing Q35 type and removal of pc-lite.
+
+ -- Erick Cardona <erick.cardona.ruiz@intel.com>  Fri, 28 Jul 2017 14:52:22 -0600

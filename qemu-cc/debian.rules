@@ -1,0 +1,66 @@
+#!/usr/bin/make -f
+include /usr/share/dpkg/default.mk
+export LANG=C
+%:
+	dh $@
+
+override_dh_auto_configure:
+	dh_auto_configure -- \
+	--prefix=/usr \
+	--datadir=/usr/share/qemu-cc \
+	--libdir=/usr/lib64/qemu-cc \
+	--libexecdir=/usr/libexec/qemu-cc \
+	--disable-tools \
+	--disable-libssh2 \
+	--disable-tcmalloc \
+	--disable-glusterfs \
+	--disable-seccomp \
+	--disable-{bzip2,snappy,lzo} \
+	--disable-usb-redir \
+	--disable-libusb \
+	--disable-libnfs \
+	--disable-tcg-interpreter \
+	--disable-debug-tcg \
+	--disable-libiscsi   \
+	--disable-rbd \
+	--disable-spice \
+	--disable-attr \
+	--disable-cap-ng \
+	--disable-linux-aio \
+	--disable-brlapi \
+	--disable-vnc-{jpeg,png,sasl} \
+	--disable-rdma \
+	--disable-bluez \
+	--disable-fdt \
+	--disable-curl \
+	--disable-curses \
+	--disable-sdl \
+	--disable-gtk \
+	--disable-tpm \
+	--disable-vte \
+	--disable-vnc \
+	--disable-xen \
+	--disable-opengl \
+	--disable-slirp \
+	--enable-trace-backend=nop \
+	--enable-virtfs --enable-attr \
+	--enable-cap-ng \
+	--target-list=x86_64-softmmu \
+	--enable-vhost-net \
+        --disable-docs
+
+override_dh_auto_build:
+	make
+
+override_dh_auto_install:
+	mkdir -p debian/qemu-cc
+	make install DESTDIR=`pwd`/debian/qemu-cc PREFIX=/usr
+	mv `pwd`/debian/qemu-cc/usr/bin/qemu-system-x86_64 `pwd`/debian/qemu-cc/usr/bin/qemu-cc-system-x86_64
+	mv `pwd`/debian/qemu-cc/usr/bin/qemu-ga `pwd`/debian/qemu-cc/usr/bin/qemu-cc-ga
+	mv `pwd`/debian/qemu-cc/usr/bin/virtfs-proxy-helper `pwd`/debian/qemu-cc/usr/bin/virtfs-cc-proxy-helper
+
+override_dh_auto_test:
+	echo "Skip dh_auto_test"
+
+override_dh_auto_clean:
+

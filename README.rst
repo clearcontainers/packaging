@@ -28,7 +28,7 @@ Included components
 * `kernel`_: Includes patches to build an optimized linux kernel required to run Clear
   Containers
 * `qemu-lite`_: Includes an optimized version of the QEMU hypervisor.
-
+* `qemu-cc`_: Includes an optimized version of the QEMU hypervisor + Q35 type support.
 
 Repositories
 ============
@@ -72,6 +72,8 @@ Repositories
 .. _`OBS`: http://openbuildservice.org/
 
 .. _`qemu-lite`: https://github.com/01org/qemu-lite/tree/qemu-2.7-lite
+
+.. _`qemu-cc`: https://github.com/clearcontainers/qemu/tree/qemu-lite-v2.9.0
 
 .. _`kernel`: https://github.com/clearcontainers/packaging/tree/master/kernel
 

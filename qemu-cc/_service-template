@@ -1,0 +1,15 @@
+<services>
+ <service name="tar_scm">
+    <param name="scm">git</param>
+    <param name="url">https://github.com/clearcontainers/qemu.git</param>
+    <param name="submodules">disable</param>
+    <param name="filename">qemu-cc</param>
+    <param name="versionformat">@VERSION@+git.%h</param>
+    <param name="revision">@REVISION@</param>
+ </service>
+ <service name="recompress">
+    <param name="file">*.tar*</param>
+    <param name="compression">gz</param>
+  </service>
+
+</services>

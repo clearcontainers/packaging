@@ -2,12 +2,14 @@ cc_proxy_hash=6a7e095133a102215f58850aba89996fa4620c2f
 cc_runtime_hash=aab48c227fa7945f1fc42307d1aac5c7a87c5bd4
 cc_shim_hash=e3caf19c4b59ae989931ed972b6cd1357c647238
 qemu_lite_hash=d4a337fe919e4e147a721c2ff96313ce84b87c7b
+qemu_cc_hash=bc5dc556479899e4b44ef5ec3fba0f491c9dfff9
 cc_proxy_version=3.0.7
 cc_runtime_version=3.0.7
 cc_shim_version=3.0.7
 clear_vm_kernel_version=4.9.60
 clear_vm_image_version=18860
 qemu_lite_version=2.7.1
+qemu_cc_version=2.9.0
 
 # OBS package versions
 # Versions matches the ones in the OBS stable release.

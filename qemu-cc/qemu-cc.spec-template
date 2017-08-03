@@ -1,0 +1,229 @@
+%global qemu_cc_hash @QEMU_CC_HASH@
+
+Name: qemu-cc
+Version: @VERSION@+git.%{qemu_cc_hash}
+Release: @RELEASE@.<B_CNT>
+Source0: %{name}-%{version}.tar.gz
+Source1: qemu-cc-rpmlintrc
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}
+
+Summary  : OpenBIOS development utilities
+Group    : Development/Tools
+License  : BSD-2-Clause BSD-3-Clause GPL-2.0 GPL-2.0+ LGPL-2.0+ LGPL-2.1
+
+Requires: qemu-cc-bin
+Requires: qemu-cc-data
+
+BuildRequires : automake
+BuildRequires : bison
+BuildRequires : flex
+BuildRequires : gcc-c++
+BuildRequires : glib2-devel
+BuildRequires : libattr-devel
+BuildRequires : libcap-devel
+BuildRequires : libcap-ng-devel
+BuildRequires : libtool
+BuildRequires : libtool-ltdl-devel
+BuildRequires : libtool
+BuildRequires : m4
+%if 0%{?suse_version}
+BuildRequires : libnuma-devel
+%else
+BuildRequires : numactl-devel
+%endif
+BuildRequires : python-devel
+BuildRequires : zlib-devel
+BuildRequires : pkgconfig(pixman-1)
+Patch1: configure.patch
+
+%undefine _missing_build_ids_terminate_build
+%define  debug_package %{nil}
+
+%description
+===========
+QEMU is a generic and open source machine & userspace emulator and
+virtualizer.
+
+%package bin
+Summary: bin components for the qemu-cc package.
+Group: Binaries
+Requires: qemu-cc-data
+
+%description bin
+bin components for the qemu-cc package.
+
+
+%package data
+Summary: data components for the qemu-cc package.
+Group: Data
+
+%description data
+data components for the qemu-cc package.
+
+%package doc
+Summary: docs for the qemu-cc package.
+Group: Data
+
+%description doc
+Docs for the qemu-cc package.
+
+%prep
+%setup -q
+%patch1 -p1
+
+%build
+export LANG=C
+
+./configure \
+    --prefix=/usr \
+    --datadir=/usr/share/qemu-cc \
+    --libdir=/usr/lib64/qemu-cc \
+    --libexecdir=/usr/libexec/qemu-cc \
+    --disable-tools \
+    --disable-libssh2 \
+    --disable-tcmalloc \
+    --disable-glusterfs \
+    --disable-seccomp \
+    --disable-{bzip2,snappy,lzo} \
+    --disable-usb-redir \
+    --disable-libusb \
+    --disable-libnfs \
+    --disable-tcg-interpreter \
+    --disable-debug-tcg \
+    --disable-libiscsi   \
+    --disable-rbd \
+    --disable-spice \
+    --disable-attr \
+    --disable-cap-ng \
+    --disable-linux-aio \
+    --disable-brlapi \
+    --disable-vnc-{jpeg,png,sasl} \
+    --disable-rdma \
+    --disable-bluez \
+    --disable-fdt \
+    --disable-curl \
+    --disable-curses \
+    --disable-sdl \
+    --disable-gtk \
+    --disable-tpm \
+    --disable-vte \
+    --disable-vnc \
+    --disable-xen \
+    --disable-opengl \
+    --disable-slirp \
+    --enable-trace-backend=nop \
+    --enable-virtfs --enable-attr \
+    --enable-cap-ng \
+    --target-list=x86_64-softmmu \
+    --enable-vhost-net \
+    --disable-docs
+
+make V=1  %{?_smp_mflags}
+
+%install
+rm -rf %{buildroot}
+make install DESTDIR=%{buildroot} PREFIX=/usr
+mv %{buildroot}/usr/bin/qemu-system-x86_64 %{buildroot}/usr/bin/qemu-cc-system-x86_64
+mv %{buildroot}/usr/bin/qemu-ga %{buildroot}/usr/bin/qemu-cc-ga
+mv %{buildroot}/usr/bin/virtfs-proxy-helper %{buildroot}/usr/bin/virtfs-cc-proxy-helper
+
+%files
+%defattr(-,root,root,-)
+
+%files bin
+%defattr(-,root,root,-)
+/usr/bin/qemu-cc-ga
+/usr/bin/qemu-cc-system-x86_64
+/usr/bin/virtfs-cc-proxy-helper
+/usr/libexec
+/usr/libexec/qemu-cc
+/usr/libexec/qemu-cc/qemu-bridge-helper
+
+%files data
+%defattr(-,root,root,-)
+/usr/share/qemu-cc
+/usr/share/qemu-cc/qemu
+/usr/share/qemu-cc/qemu/acpi-dsdt.aml
+/usr/share/qemu-cc/qemu/bamboo.dtb
+/usr/share/qemu-cc/qemu/bios-256k.bin
+/usr/share/qemu-cc/qemu/bios.bin
+/usr/share/qemu-cc/qemu/efi-e1000e.rom
+/usr/share/qemu-cc/qemu/efi-e1000.rom
+/usr/share/qemu-cc/qemu/efi-eepro100.rom
+/usr/share/qemu-cc/qemu/efi-ne2k_pci.rom
+/usr/share/qemu-cc/qemu/efi-pcnet.rom
+/usr/share/qemu-cc/qemu/efi-rtl8139.rom
+/usr/share/qemu-cc/qemu/efi-virtio.rom
+/usr/share/qemu-cc/qemu/efi-vmxnet3.rom
+/usr/share/qemu-cc/qemu/kvmvapic.bin
+/usr/share/qemu-cc/qemu/linuxboot.bin
+/usr/share/qemu-cc/qemu/linuxboot_dma.bin
+/usr/share/qemu-cc/qemu/multiboot.bin
+/usr/share/qemu-cc/qemu/openbios-ppc
+/usr/share/qemu-cc/qemu/openbios-sparc32
+/usr/share/qemu-cc/qemu/openbios-sparc64
+/usr/share/qemu-cc/qemu/palcode-clipper
+/usr/share/qemu-cc/qemu/petalogix-ml605.dtb
+/usr/share/qemu-cc/qemu/petalogix-s3adsp1800.dtb
+/usr/share/qemu-cc/qemu/ppc_rom.bin
+/usr/share/qemu-cc/qemu/pxe-e1000.rom
+/usr/share/qemu-cc/qemu/pxe-eepro100.rom
+/usr/share/qemu-cc/qemu/pxe-ne2k_pci.rom
+/usr/share/qemu-cc/qemu/pxe-pcnet.rom
+/usr/share/qemu-cc/qemu/pxe-rtl8139.rom
+/usr/share/qemu-cc/qemu/pxe-virtio.rom
+/usr/share/qemu-cc/qemu/QEMU,cgthree.bin
+/usr/share/qemu-cc/qemu/qemu-icon.bmp
+/usr/share/qemu-cc/qemu/qemu_logo_no_text.svg
+/usr/share/qemu-cc/qemu/QEMU,tcx.bin
+/usr/share/qemu-cc/qemu/s390-ccw.img
+/usr/share/qemu-cc/qemu/sgabios.bin
+/usr/share/qemu-cc/qemu/skiboot.lid
+/usr/share/qemu-cc/qemu/slof.bin
+/usr/share/qemu-cc/qemu/spapr-rtas.bin
+/usr/share/qemu-cc/qemu/trace-events-all
+/usr/share/qemu-cc/qemu/u-boot.e500
+/usr/share/qemu-cc/qemu/vgabios.bin
+/usr/share/qemu-cc/qemu/vgabios-cirrus.bin
+/usr/share/qemu-cc/qemu/vgabios-qxl.bin
+/usr/share/qemu-cc/qemu/vgabios-stdvga.bin
+/usr/share/qemu-cc/qemu/vgabios-virtio.bin
+/usr/share/qemu-cc/qemu/vgabios-vmware.bin
+/usr/share/qemu-cc/qemu/keymaps
+/usr/share/qemu-cc/qemu/keymaps/ar
+/usr/share/qemu-cc/qemu/keymaps/bepo
+/usr/share/qemu-cc/qemu/keymaps/common
+/usr/share/qemu-cc/qemu/keymaps/cz
+/usr/share/qemu-cc/qemu/keymaps/da
+/usr/share/qemu-cc/qemu/keymaps/de
+/usr/share/qemu-cc/qemu/keymaps/de-ch
+/usr/share/qemu-cc/qemu/keymaps/en-gb
+/usr/share/qemu-cc/qemu/keymaps/en-us
+/usr/share/qemu-cc/qemu/keymaps/es
+/usr/share/qemu-cc/qemu/keymaps/et
+/usr/share/qemu-cc/qemu/keymaps/fi
+/usr/share/qemu-cc/qemu/keymaps/fo
+/usr/share/qemu-cc/qemu/keymaps/fr
+/usr/share/qemu-cc/qemu/keymaps/fr-be
+/usr/share/qemu-cc/qemu/keymaps/fr-ca
+/usr/share/qemu-cc/qemu/keymaps/fr-ch
+/usr/share/qemu-cc/qemu/keymaps/hr
+/usr/share/qemu-cc/qemu/keymaps/hu
+/usr/share/qemu-cc/qemu/keymaps/is
+/usr/share/qemu-cc/qemu/keymaps/it
+/usr/share/qemu-cc/qemu/keymaps/ja
+/usr/share/qemu-cc/qemu/keymaps/lt
+/usr/share/qemu-cc/qemu/keymaps/lv
+/usr/share/qemu-cc/qemu/keymaps/mk
+/usr/share/qemu-cc/qemu/keymaps/modifiers
+/usr/share/qemu-cc/qemu/keymaps/nl
+/usr/share/qemu-cc/qemu/keymaps/nl-be
+/usr/share/qemu-cc/qemu/keymaps/no
+/usr/share/qemu-cc/qemu/keymaps/pl
+/usr/share/qemu-cc/qemu/keymaps/pt
+/usr/share/qemu-cc/qemu/keymaps/pt-br
+/usr/share/qemu-cc/qemu/keymaps/ru
+/usr/share/qemu-cc/qemu/keymaps/sl
+/usr/share/qemu-cc/qemu/keymaps/sv
+/usr/share/qemu-cc/qemu/keymaps/th
+/usr/share/qemu-cc/qemu/keymaps/tr
