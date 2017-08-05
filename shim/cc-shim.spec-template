@@ -1,3 +1,9 @@
+%if 0%{?suse_version}
+%define LIBEXECDIR %{_libdir}
+%else
+%define LIBEXECDIR %{_libexecdir}
+%endif
+
 %undefine _missing_build_ids_terminate_build
 Name:      cc-shim
 Version:   @VERSION@
@@ -31,7 +37,7 @@ bin components for the cc-oci-shim package.
 %setup -q
 
 %build
-./autogen.sh
+./autogen.sh --libexecdir=%{LIBEXECDIR}/clear-containers
 make DESTDIR=%{buildroot}
 
 %check
@@ -47,4 +53,4 @@ make install DESTDIR=%{buildroot}
 
 %files bin
 %defattr(-,root,root,-)
-/usr/libexec/clear-containers/cc-shim
+%{LIBEXECDIR}/clear-containers/cc-shim
