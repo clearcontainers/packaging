@@ -89,8 +89,14 @@ make install DESTDIR=%{buildroot} PREFIX=/usr SYSCONFDIR=/etc LOCALSTATEDIR=/var
 %files bin
 %defattr(-,root,root,-)
 /usr/bin/cc-runtime
+/var/lib/clear-containers
+/var/lib/clear-containers/runtime
+/var/lib/clear-containers/runtime/bundles
+/var/lib/clear-containers/runtime/bundles/pause_bundle
+/var/lib/clear-containers/runtime/bundles/pause_bundle/bin
 /var/lib/clear-containers/runtime/bundles/pause_bundle/bin/pause
 
 %files config
 %defattr(-,root,root,-)
+/etc/clear-containers
 /etc/clear-containers/configuration.toml

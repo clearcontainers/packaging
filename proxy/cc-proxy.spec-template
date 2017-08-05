@@ -82,6 +82,7 @@ make install DESTDIR=%{buildroot} LIBEXECDIR=%{LIBEXECDIR}
 
 %files bin
 %defattr(-,root,root,-)
+%{LIBEXECDIR}/clear-containers
 %{LIBEXECDIR}/clear-containers/cc-proxy
 
 %files config

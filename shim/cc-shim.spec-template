@@ -53,4 +53,5 @@ make install DESTDIR=%{buildroot}
 
 %files bin
 %defattr(-,root,root,-)
+%{LIBEXECDIR}/clear-containers
 %{LIBEXECDIR}/clear-containers/cc-shim
