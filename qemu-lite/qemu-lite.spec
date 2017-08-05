@@ -12,6 +12,7 @@ Requires: qemu-lite-data
 BuildRequires : automake
 BuildRequires : bison
 BuildRequires : flex
+BuildRequires : gcc-c++
 BuildRequires : glib2-devel
 BuildRequires : libattr-devel
 BuildRequires : libcap-devel
@@ -20,9 +21,13 @@ BuildRequires : libtool
 BuildRequires : libtool-ltdl-devel
 BuildRequires : libtool
 BuildRequires : m4
+%if 0%{?suse_version}
+BuildRequires : libnuma-devel
+%else
 BuildRequires : numactl-devel
+%endif
 BuildRequires : python-devel
-BuildRequires : zlib
+BuildRequires : zlib-devel
 BuildRequires : pkgconfig(pixman-1)
 Patch1: configure.patch
 
