@@ -30,6 +30,33 @@ Included components
 * `qemu-lite`_: Includes an optimized version of the QEMU hypervisor.
 
 
+Repositories
+============
+
+* CentOS
+
+  * 7.x http://download.opensuse.org/repositories/home:/clearcontainers:/clear-containers-3/CentOS_7/
+
+* Fedora
+
+  * 24 http://download.opensuse.org/repositories/home:/clearcontainers:/clear-containers-3/Fedora_24/
+  * 25 http://download.opensuse.org/repositories/home:/clearcontainers:/clear-containers-3/Fedora_25/
+  * 26 http://download.opensuse.org/repositories/home:/clearcontainers:/clear-containers-3/Fedora_26/
+
+* OpenSUSE
+
+  * Tumbleweed http://download.opensuse.org/repositories/home:/clearcontainers:/clear-containers-3/openSUSE_Tumbleweed/
+
+* RHEL
+
+  * 7.x http://download.opensuse.org/repositories/home:/clearcontainers:/clear-containers-3/RHEL_7/
+
+* Ubuntu
+
+  * 16.04 http://download.opensuse.org/repositories/home:/clearcontainers:/clear-containers-3/xUbuntu_16.04/
+  * 16.10 http://download.opensuse.org/repositories/home:/clearcontainers:/clear-containers-3/xUbuntu_16.10/
+  * 17.04 http://download.opensuse.org/repositories/home:/clearcontainers:/clear-containers-3/xUbuntu_17.04/
+
 .. _`Clear Containers`:  https://clearlinux.org/features/intel%C2%AE-clear-containers
 
 .. _`OCI`:  https://www.opencontainers.org/
