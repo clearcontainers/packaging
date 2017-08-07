@@ -21,7 +21,11 @@ BuildRequires:  bc
 # For bfd support in perf/trace
 BuildRequires:  binutils-devel
 BuildRequires:  elfutils
+%if 0%{?rhel_version}
 BuildRequires:  elfutils-devel
+%else
+BuildRequires:  pkgconfig(libelf)
+%endif
 BuildRequires:  make >= 3.78
 BuildRequires:  openssl
 BuildRequires:  openssl-devel

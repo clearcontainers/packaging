@@ -6,12 +6,19 @@
 %global IMPORTNAME %{DOMAIN}/%{ORG}/%{PROJECT}
 %global GO_VERSION @GO_VERSION@
 
+%if 0%{?suse_version}
+%define LIBEXECDIR %{_libdir}
+%else
+%define LIBEXECDIR %{_libexecdir}
+%endif
+
 %undefine _missing_build_ids_terminate_build
 Name:      cc-proxy
 Version:   @VERSION@
 Release:   0
 Source0:   %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: pkgconfig(systemd)
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : Apache-2.0 GPL-2.0
@@ -60,7 +67,7 @@ export COMMIT=%{version}
 mkdir -p $HOME/rpmbuild/BUILD/go/src/%{DOMAIN}/%{ORG}
 ln -s %{_builddir}/%{name}-%{version} $HOME/rpmbuild/BUILD/go/src/%{IMPORTNAME}
 cd $HOME/rpmbuild/BUILD/go/src/%{IMPORTNAME}
-make
+make LIBEXECDIR=%{LIBEXECDIR}
 
 %check
 export http_proxy=http://127.0.0.1:9/
@@ -68,14 +75,15 @@ export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost
 
 %install
-make install DESTDIR=%{buildroot}
+make install DESTDIR=%{buildroot} LIBEXECDIR=%{LIBEXECDIR}
 
 %files
 %defattr(-,root,root,-)
 
 %files bin
 %defattr(-,root,root,-)
-/usr/libexec/clear-containers/cc-proxy
+%{LIBEXECDIR}/clear-containers
+%{LIBEXECDIR}/clear-containers/cc-proxy
 
 %files config
 %defattr(-,root,root,-)
