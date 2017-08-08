@@ -21,7 +21,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: pkgconfig(systemd)
 Summary  : No detailed summary available
 Group    : Development/Tools
-License  : Apache-2.0 GPL-2.0
+License  : Apache-2.0
 
 Requires: cc-proxy-bin
 Requires: cc-proxy-config

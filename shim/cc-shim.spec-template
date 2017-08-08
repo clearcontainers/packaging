@@ -14,7 +14,7 @@ BuildRequires: autoconf
 BuildRequires: automake
 Summary  : No detailed summary available
 Group    : Development/Tools
-License  : Apache-2.0 GPL-2.0
+License  : Apache-2.0
 
 Requires: cc-shim-bin
 
