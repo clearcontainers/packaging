@@ -19,7 +19,6 @@ short_hashtag="${hash_tag:0:7}"
 [ -z "$hash_tag" ] && hash_tag=$VERSION || :
 
 OBS_PUSH=${OBS_PUSH:-false}
-STAGING=${STAGING:-true}
 OBS_RUNTIME_REPO=${OBS_RUNTIME_REPO:-home:clearcontainers:clear-containers-3-staging/cc-runtime}
 : ${OBS_APIURL:=""}
 
@@ -50,58 +49,31 @@ function changelog_update {
 }
 changelog_update $VERSION
 
-function templating_non_staging(){
-    sed -e "s/@VERSION@/$VERSION/" \
-        -e "s/@GO_VERSION@/$GO_VERSION/g;" \
-        -e "s/@cc_proxy_version@/$proxy_obs_fedora_version/" \
-        -e "s/@cc_shim_version@/$shim_obs_fedora_version/" \
-        -e "s/@cc_image_version@/$image_obs_fedora_version/" \
-        -e "s/@linux_container_version@/$linux_container_obs_fedora_version/" cc-runtime.spec-template > cc-runtime.spec
+sed -e "s/@VERSION@/$VERSION/" \
+    -e "s/@GO_VERSION@/$GO_VERSION/g;" \
+    -e "s/@cc_proxy_version@/$proxy_obs_fedora_version/" \
+    -e "s/@cc_shim_version@/$shim_obs_fedora_version/" \
+    -e "s/@qemu_lite_version@/$qemu_lite_obs_fedora_version/" \
+    -e "s/@cc_image_version@/$image_obs_fedora_version/" \
+    -e "s/@linux_container_version@/$linux_container_obs_fedora_version/" cc-runtime.spec-template > cc-runtime.spec
 
-    sed -e "s/@VERSION_DEB_TRANSFORM@/$VERSION_DEB_TRANSFORM/g;" \
-        -e "s/@HASH_TAG@/$short_hashtag/g;" \
-        -e "s/@cc_proxy_version@/$proxy_obs_ubuntu_version/" \
-        -e "s/@cc_shim_version@/$shim_obs_ubuntu_version/" \
-        -e "s/@cc_image_version@/$image_obs_ubuntu_version/" \
-        -e "s/@linux_container_version@/$linux_container_obs_ubuntu_version/" cc-runtime.dsc-template > cc-runtime.dsc
+sed -e "s/@VERSION_DEB_TRANSFORM@/$VERSION_DEB_TRANSFORM/g;" \
+    -e "s/@HASH_TAG@/$short_hashtag/g;" \
+    -e "s/@cc_proxy_version@/$proxy_obs_ubuntu_version/" \
+    -e "s/@cc_shim_version@/$shim_obs_ubuntu_version/" \
+    -e "s/@qemu_lite_version@/$qemu_lite_obs_ubuntu_version/" \
+    -e "s/@cc_image_version@/$image_obs_ubuntu_version/" \
+    -e "s/@linux_container_version@/$linux_container_obs_ubuntu_version/" cc-runtime.dsc-template > cc-runtime.dsc
 
-    sed -e "s/@VERSION_DEB_TRANSFORM@/$VERSION_DEB_TRANSFORM/g;" \
-        -e "s/@HASH_TAG@/$short_hashtag/g;" \
-        -e "s/@cc_proxy_version@/$proxy_obs_ubuntu_version/" \
-        -e "s/@cc_shim_version@/$shim_obs_ubuntu_version/" \
-        -e "s/@cc_image_version@/$image_obs_ubuntu_version/" \
-        -e "s/@linux_container_version@/$linux_container_obs_ubuntu_version/" debian.control-template > debian.control
+sed -e "s/@VERSION_DEB_TRANSFORM@/$VERSION_DEB_TRANSFORM/g;" \
+    -e "s/@HASH_TAG@/$short_hashtag/g;" \
+    -e "s/@cc_proxy_version@/$proxy_obs_ubuntu_version/" \
+    -e "s/@cc_shim_version@/$shim_obs_ubuntu_version/" \
+    -e "s/@qemu_lite_version@/$qemu_lite_obs_ubuntu_version/" \
+    -e "s/@cc_image_version@/$image_obs_ubuntu_version/" \
+    -e "s/@linux_container_version@/$linux_container_obs_ubuntu_version/" debian.control-template > debian.control
 
-    sed "s/@VERSION@/$VERSION/g;" _service-template > _service
-}
-
-function templating_staging(){
-
-    sed -e "s/@VERSION@/$VERSION/" \
-        -e "s/@GO_VERSION@/$GO_VERSION/g;" cc-runtime.spec-template > cc-runtime.spec
-
-    sed -e "s/@VERSION_DEB_TRANSFORM@/$VERSION_DEB_TRANSFORM/g;" \
-        -e "s/@HASH_TAG@/$short_hashtag/g;" cc-runtime.dsc-template > cc-runtime.dsc
-
-    sed -e "s/@VERSION_DEB_TRANSFORM@/$VERSION_DEB_TRANSFORM/g;" \
-        -e "s/@HASH_TAG@/$short_hashtag/g;" debian.control-template > debian.control
-
-    sed "s/@VERSION@/$VERSION/g;" _service-template > _service
-
-    sed -e "s/^Depends:.*/Depends: \${shlibs:Depends}, \${misc:Depends}, \${perl:Depends}/" \
-        -e "/clear-containers-image*/d" \
-        -e "/cc-proxy*/d" -i cc-runtime.dsc debian.control
-
-    sed -e '/Requires: cc-*/d' \
-        -e '/Requires: clear-containers-*/d' \
-        -e '/Requires: linux-container*/d' -i cc-runtime.spec
-}
-
-if [ "$STAGING" == false ]; then
-    templating_non_staging
-else
-    templating_staging
-fi
+sed "s/@VERSION@/$VERSION/g;" _service-template > _service
 
 # Update and package OBS
 if [ "$OBS_PUSH" = true ]
