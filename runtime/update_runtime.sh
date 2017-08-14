@@ -63,6 +63,7 @@ function templating_non_staging(){
         -e "s/@cc_proxy_version@/$proxy_obs_ubuntu_version/" \
         -e "s/@cc_shim_version@/$shim_obs_ubuntu_version/" \
         -e "s/@cc_image_version@/$image_obs_ubuntu_version/" \
+        -e "s/@qemu_lite_version@/$qemu_lite_obs_ubuntu_version/" \
         -e "s/@linux_container_version@/$linux_container_obs_ubuntu_version/" cc-runtime.dsc-template > cc-runtime.dsc
 
     sed -e "s/@VERSION_DEB_TRANSFORM@/$VERSION_DEB_TRANSFORM/g;" \
@@ -70,6 +71,7 @@ function templating_non_staging(){
         -e "s/@cc_proxy_version@/$proxy_obs_ubuntu_version/" \
         -e "s/@cc_shim_version@/$shim_obs_ubuntu_version/" \
         -e "s/@cc_image_version@/$image_obs_ubuntu_version/" \
+        -e "s/@qemu_lite_version@/$qemu_lite_obs_ubuntu_version/" \
         -e "s/@linux_container_version@/$linux_container_obs_ubuntu_version/" debian.control-template > debian.control
 
     sed "s/@VERSION@/$VERSION/g;" _service-template > _service
@@ -88,11 +90,12 @@ function templating_staging(){
 
     sed "s/@VERSION@/$VERSION/g;" _service-template > _service
 
-    sed -e "s/^Depends:.*/Depends: \${shlibs:Depends}, \${misc:Depends}, \${perl:Depends}/" \
+    sed -e '/^Package: cc-runtime$/{n;n;s/^Depends: .*/Depends: \${shlibs:Depends}, \${misc:Depends}, \${perl:Depends}, cc-runtime-bin, cc-runtime-config/}' \
         -e "/clear-containers-image*/d" \
         -e "/cc-proxy*/d" -i cc-runtime.dsc debian.control
 
-    sed -e '/Requires: cc-*/d' \
+    sed -e '/Requires: cc-proxy/d' \
+        -e '/Requires: cc-shim/d' \
         -e '/Requires: clear-containers-*/d' \
         -e '/Requires: linux-container*/d' -i cc-runtime.spec
 }
