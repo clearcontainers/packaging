@@ -33,7 +33,6 @@ groups:
   approvers:
     required: 1
     users:
-      - dlespiau
       - erick0z
       - gorozco1
       - grahamwhaley
