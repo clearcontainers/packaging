@@ -13,10 +13,9 @@ source ../versions.txt
 VERSION=${1:-$cc_runtime_version}
 VERSION_DEB_TRANSFORM=$(echo $VERSION | tr -d '-')
 
-hash_tag=$cc_runtime_hash
+# If we are providing the branch or hash to build we'll take version as the hashtag
+[ -n "$1" ] && hash_tag=$VERSION || hash_tag=$cc_runtime_hash
 short_hashtag="${hash_tag:0:7}"
-# If there is no tag matching $VERSION we'll get $VERSION as the reference
-[ -z "$hash_tag" ] && hash_tag=$VERSION || :
 
 OBS_PUSH=${OBS_PUSH:-false}
 STAGING=${STAGING:-true}
@@ -75,6 +74,8 @@ function templating_non_staging(){
         -e "s/@linux_container_version@/$linux_container_obs_ubuntu_version/" debian.control-template > debian.control
 
     sed "s/@VERSION@/$VERSION/g;" _service-template > _service
+
+    [ -n "$1" ] && sed -e "s/@PARENT_TAG@/$VERSION/" -i _service || :
 }
 
 function templating_staging(){
@@ -90,6 +91,8 @@ function templating_staging(){
 
     sed "s/@VERSION@/$VERSION/g;" _service-template > _service
 
+    [ -n "$1" ] && sed -e "s/@PARENT_TAG@/$VERSION/" -i _service || :
+
     sed -e '/^Package: cc-runtime$/{n;n;s/^Depends: .*/Depends: \${shlibs:Depends}, \${misc:Depends}, \${perl:Depends}, cc-runtime-bin, cc-runtime-config/}' \
         -e "/clear-containers-image*/d" \
         -e "/cc-proxy*/d" -i cc-runtime.dsc debian.control
@@ -101,9 +104,9 @@ function templating_staging(){
 }
 
 if [ "$STAGING" == false ]; then
-    templating_non_staging
+    templating_non_staging "$@"
 else
-    templating_staging
+    templating_staging "$@"
 fi
 
 # Update and package OBS
@@ -117,12 +120,16 @@ then
        debian.control \
         _service \
         $TMPDIR
+    rm $TMPDIR/*.patch
+    [ -f $TMPDIR/debian.series ] && rm $TMPDIR/debian.series || :
     cp debian.changelog \
         debian.compat \
         debian.rules \
         cc-runtime-bin.install \
         cc-runtime-config.install \
+        *.patch \
         $TMPDIR
+    [ -f debian.series ] && cp debian.series $TMPDIR || :
     cd $TMPDIR
 
     if [ ! -e "go${GO_VERSION}.linux-amd64.tar.gz" ]; then

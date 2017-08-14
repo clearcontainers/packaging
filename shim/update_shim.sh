@@ -13,10 +13,9 @@ source ../versions.txt
 VERSION=${1:-$cc_shim_version}
 VERSION_DEB_TRANSFORM=$(echo $VERSION | tr -d '-')
 
-hash_tag=$cc_shim_hash
+# If we are providing the branch or hash to build we'll take version as the hashtag
+[ -n "$1" ] && hash_tag=$VERSION || hash_tag=$cc_shim_hash
 short_hashtag="${hash_tag:0:7}"
-# If there is no tag matching $VERSION we'll get $VERSION as the reference
-[ -z "$hash_tag" ] && hash_tag=$VERSION || :
 
 OBS_PUSH=${OBS_PUSH:-false}
 OBS_SHIM_REPO=${OBS_SHIM_REPO:-home:clearcontainers:clear-containers-3-staging/cc-shim}
@@ -64,10 +63,14 @@ then
         _service \
         debian.control \
         $TMPDIR
+    rm $TMPDIR/*.patch
+    [ -f $TMPDIR/debian.series ] && rm $TMPDIR/debian.series || :
     cp debian.changelog \
         debian.rules \
         debian.compat \
+        *.patch \
         $TMPDIR
+    [ -f debian.series ] && cp debian.series $TMPDIR || :
     cd $TMPDIR
     osc $APIURL addremove
     osc $APIURL commit -m "Update cc-shim $VERSION: ${hash_tag:0:7}"
