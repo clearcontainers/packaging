@@ -13,10 +13,9 @@ source ../versions.txt
 VERSION=${1:-$cc_proxy_version}
 VERSION_DEB_TRANSFORM=$(echo $VERSION | tr -d '-')
 
-hash_tag=$cc_proxy_hash
+# If we are providing the branch or hash to build we'll take version as the hashtag
+[ -n "$1" ] && hash_tag=$VERSION || hash_tag=$cc_proxy_hash
 short_hashtag="${hash_tag:0:7}"
-# If there is no tag matching $VERSION we'll get $VERSION as the reference
-[ -z "$hash_tag" ] && hash_tag=$VERSION || :
 
 OBS_PUSH=${OBS_PUSH:-false}
 OBS_PROXY_REPO=${OBS_PROXY_REPO:-home:clearcontainers:clear-containers-3-staging/cc-proxy}
@@ -52,6 +51,8 @@ sed -e "s/@VERSION_DEB_TRANSFORM@/$VERSION_DEB_TRANSFORM/g;" -e "s/@HASH_TAG@/$s
 sed -e "s/@VERSION_DEB_TRANSFORM@/$VERSION_DEB_TRANSFORM/g;" -e "s/@HASH_TAG@/$short_hashtag/g;" debian.control-template > debian.control
 sed "s/@VERSION@/$VERSION/g;" _service-template > _service
 
+[ -n "$1" ] && sed -e "s/@PARENT_TAG@/$VERSION/" -i _service || :
+
 # Update and package OBS
 if [ "$OBS_PUSH" = true ]
 then
@@ -63,12 +64,14 @@ then
        debian.control \
         _service \
         $TMPDIR
+    rm $TMPDIR/*.patch
+    [ -f $TMPDIR/debian.series ] && rm $TMPDIR/debian.series || :
     cp debian.changelog \
         debian.compat \
         debian.rules \
-        debian.series \
-        disable-systemd-check.patch \
+        *.patch \
         $TMPDIR
+    [ -f debian.series ] && cp debian.series $TMPDIR || :
     cd $TMPDIR
 
     if [ ! -e "go${GO_VERSION}.linux-amd64.tar.gz" ]; then
