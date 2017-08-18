@@ -27,8 +27,6 @@ else
     APIURL=""
 fi
 
-GO_VERSION=${GO_VERSION:-"1.8.3"}
-
 echo "Running: $0 $@"
 echo "Update cc-proxy $VERSION: ${hash_tag:0:7}"
 
@@ -46,7 +44,7 @@ function changelog_update {
     rm debian.changelog-bk
 }
 changelog_update $VERSION
-sed -e "s/@VERSION@/$VERSION/g;" -e "s/@GO_VERSION@/$GO_VERSION/g;" cc-proxy.spec-template > cc-proxy.spec
+sed -e "s/@VERSION@/$VERSION/" cc-proxy.spec-template > cc-proxy.spec
 sed -e "s/@VERSION_DEB_TRANSFORM@/$VERSION_DEB_TRANSFORM/g;" -e "s/@HASH_TAG@/$short_hashtag/g;" cc-proxy.dsc-template > cc-proxy.dsc
 sed -e "s/@VERSION_DEB_TRANSFORM@/$VERSION_DEB_TRANSFORM/g;" -e "s/@HASH_TAG@/$short_hashtag/g;" debian.control-template > debian.control
 sed "s/@VERSION@/$VERSION/g;" _service-template > _service
@@ -74,9 +72,8 @@ then
     [ -f debian.series ] && cp debian.series $TMPDIR || :
     cd $TMPDIR
 
-    if [ ! -e "go${GO_VERSION}.linux-amd64.tar.gz" ]; then
+    if [ -e "go1.8.3.linux-amd64.tar.gz" ]; then
         rm go*.tar.gz
-        curl -OkL https://storage.googleapis.com/golang/go$GO_VERSION.linux-amd64.tar.gz
     fi
     osc $APIURL addremove
     osc $APIURL commit -m "Update cc-proxy $VERSION: ${hash_tag:0:7}"

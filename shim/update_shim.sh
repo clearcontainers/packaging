@@ -27,8 +27,6 @@ else
     APIURL=""
 fi
 
-GO_VERSION=${GO_VERSION:-"1.8.3"}
-
 echo "Running: $0 $@"
 echo "Update cc-shim $VERSION: ${hash_tag:0:7}"
 

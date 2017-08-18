@@ -29,8 +29,6 @@ else
 fi
 
 
-GO_VERSION=${GO_VERSION:-"1.8.3"}
-
 echo "Running: $0 $@"
 echo "Update cc-runtime $VERSION: ${hash_tag:0:7}"
 
@@ -51,7 +49,6 @@ changelog_update $VERSION
 
 function templating_non_staging(){
     sed -e "s/@VERSION@/$VERSION/" \
-        -e "s/@GO_VERSION@/$GO_VERSION/g;" \
         -e "s/@cc_proxy_version@/$proxy_obs_fedora_version/" \
         -e "s/@cc_shim_version@/$shim_obs_fedora_version/" \
         -e "s/@cc_image_version@/$image_obs_fedora_version/" \
@@ -80,8 +77,7 @@ function templating_non_staging(){
 
 function templating_staging(){
 
-    sed -e "s/@VERSION@/$VERSION/" \
-        -e "s/@GO_VERSION@/$GO_VERSION/g;" cc-runtime.spec-template > cc-runtime.spec
+    sed -e "s/@VERSION@/$VERSION/" cc-runtime.spec-template > cc-runtime.spec
 
     sed -e "s/@VERSION_DEB_TRANSFORM@/$VERSION_DEB_TRANSFORM/g;" \
         -e "s/@HASH_TAG@/$short_hashtag/g;" cc-runtime.dsc-template > cc-runtime.dsc
@@ -132,9 +128,8 @@ then
     [ -f debian.series ] && cp debian.series $TMPDIR || :
     cd $TMPDIR
 
-    if [ ! -e "go${GO_VERSION}.linux-amd64.tar.gz" ]; then
+    if [ -e "go1.8.3.linux-amd64.tar.gz" ]; then
         rm go*.tar.gz
-        curl -OkL https://storage.googleapis.com/golang/go$GO_VERSION.linux-amd64.tar.gz
     fi
     osc $APIURL addremove
     osc $APIURL commit -m "Update cc-runtime $VERSION: ${hash_tag:0:7}"
