@@ -11,11 +11,16 @@ AUTHOR_EMAIL=${AUTHOR_EMAIL:-$(git config user.email)}
 
 source ../versions.txt
 VERSION=${1:-$cc_shim_version}
-VERSION_DEB_TRANSFORM=$(echo $VERSION | tr -d '-')
 
 # If we are providing the branch or hash to build we'll take version as the hashtag
 [ -n "$1" ] && hash_tag=$VERSION || hash_tag=$cc_shim_hash
 short_hashtag="${hash_tag:0:7}"
+
+if [[ ${VERSION::1} =~ [a-z] ]]; then
+    ORIGINAL_VERSION=$VERSION
+    VERSION=1${VERSION:1}
+fi
+VERSION_DEB_TRANSFORM=$(echo $VERSION | tr -d '-')
 
 OBS_PUSH=${OBS_PUSH:-false}
 OBS_SHIM_REPO=${OBS_SHIM_REPO:-home:clearcontainers:clear-containers-3-staging/cc-shim}
@@ -48,7 +53,14 @@ changelog_update $VERSION
 sed "s/@VERSION@/$VERSION/g;" cc-shim.spec-template > cc-shim.spec
 sed -e "s/@VERSION_DEB_TRANSFORM@/$VERSION_DEB_TRANSFORM/g;" -e "s/@HASH_TAG@/$short_hashtag/g;" cc-shim.dsc-template > cc-shim.dsc
 sed -e "s/@VERSION_DEB_TRANSFORM@/$VERSION_DEB_TRANSFORM/g;" -e "s/@HASH_TAG@/$short_hashtag/g;" debian.control-template > debian.control
-sed "s/@VERSION@/$VERSION/g;" _service-template > _service
+
+if [ -z "$ORIGINAL_VERSION" ]; then
+    sed "s/@VERSION@/$VERSION/g;" _service-template > _service
+else
+    sed "s/@VERSION@/$ORIGINAL_VERSION/g;" _service-template > _service
+fi
+
+[ -n "$1" ] && sed -e "s/@PARENT_TAG@/$VERSION/" -i _service || :
 
 # Update and package OBS
 if [ "$OBS_PUSH" = true ]
