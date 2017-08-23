@@ -12,7 +12,11 @@
  
  
 # Version of distribution SELinux policy package 
+%global selinux_policyver_rhel 3.13.1-102.el7
 %global selinux_policyver 3.13.1-128.6.fc22
+
+# Version of Python for f25
+%global fedora25_pythonver 2.7.12-7.fc25
  
 # Package information
 Name:			clear-containers-selinux
@@ -23,7 +27,14 @@ Group:			System Environment/Base
 Summary:		SELinux Policies for Clear Containers
 BuildArch:		noarch
 URL:			https://github.com/01org/cc-oci-runtime
+%if 0%{?rhel} >= 7
+Requires(post):		selinux-policy-base >= %{selinux_policyver_rhel}, selinux-policy-targeted >= %{selinux_policyver_rhel}, policycoreutils, policycoreutils-python libselinux-utils
+%else
 Requires(post):		selinux-policy-base >= %{selinux_policyver}, selinux-policy-targeted >= %{selinux_policyver}, policycoreutils, policycoreutils-python libselinux-utils
+%endif
+%if 0%{?fedora} >= 25
+BuildRequires:         python >= %{fedora25_pythonver}
+%endif
 BuildRequires:		selinux-policy selinux-policy-devel
  
 Source:			%{name}-%{version}.tar.gz
