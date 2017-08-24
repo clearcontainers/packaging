@@ -7,7 +7,7 @@ KernelVer=${DEB_VERSION_UPSTREAM_REVISION}.container
 
 override_dh_auto_build:
 	perl -p -i -e "s/^EXTRAVERSION.*/EXTRAVERSION = -${KernelVer}/" Makefile
-	cp debian/config .config
+	cp /usr/src/packages/SOURCES/config .config
 	make -s ARCH=x86_64 oldconfig > /dev/null
 	make -s CONFIG_DEBUG_SECTION_MISMATCH=y -j8 ARCH=x86_64 all
 

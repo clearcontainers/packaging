@@ -1,7 +1,7 @@
 Source: linux-container
 Section: devel
 Priority: optional
-Maintainer: clearlinux.org team <dev@lists.clearlinux.org>
+Maintainer: clear containers team <cc-devel@lists.01.org>
 Build-Depends: debhelper (>= 9), cpio, libelf-dev, libnewt-dev, libiberty-dev, rsync, libdw-dev, libpci-dev, pkg-config, flex, bison, libunwind8-dev, openssl, libaudit-dev, bc, python-dev, gawk, autoconf, automake, libtool, libssl-dev
 Standards-Version: 3.9.6
 Homepage: https://clearlinux.org/features/clear-containers
