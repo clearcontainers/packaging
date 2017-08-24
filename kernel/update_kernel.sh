@@ -17,62 +17,58 @@ VERSION=${1:-$clear_vm_kernel_version}
 OBS_PUSH=${OBS_PUSH:-false}
 OBS_CC_KERNEL_REPO=${OBS_CC_KERNEL_REPO:-home:clearlinux:preview:clear-containers-staging/linux-container}
 
-git checkout obs_working_dir/debian/changelog
-last_release=`cat obs_working_dir/debian/changelog | head -1 | awk '{print $2}' | cut -d'-' -f2 | tr -d ')'`
+git checkout debian.changelog
+last_release=$(awk 'NR==1{ gsub(".*-|\).*",""); print $0}' debian.changelog)
 next_release=$(( $last_release + 1 ))
+kernel_sha256=$(curl -s  https://cdn.kernel.org/pub/linux/kernel/v4.x/sha256sums.asc | awk '/linux-'${VERSION}'.tar.xz/ {print $1}')
 
 echo "Running: $0 $@"
 echo "Update linux-container to: $VERSION-$next_release"
 
 function changelog_update {
-    d=$(date +"%a, %d %b %Y %H:%M:%S %z")
-    cp obs_working_dir/debian/changelog obs_working_dir/debian/changelog-bk
+    d=$(date -R)
+    cp debian.changelog debian.changelog-bk
     cat <<< "linux-container ($VERSION-$next_release) stable; urgency=medium
 
   * Update kernel $VERSION
 
  -- $AUTHOR <$AUTHOR_EMAIL>  $d
-" > obs_working_dir/debian/changelog
+" > debian.changelog
 
-    cat obs_working_dir/debian/changelog-bk >> obs_working_dir/debian/changelog
-    rm obs_working_dir/debian/changelog-bk
+    cat debian.changelog-bk >> debian.changelog
+    rm debian.changelog-bk
 }
 
 changelog_update $VERSION
 
 sed "s/\@VERSION\@/$VERSION/g; s/\@RELEASE\@/$next_release/g" linux-container.spec-template > linux-container.spec
-spectool -g linux-container.spec
-
-ln -s linux-$VERSION.tar.xz linux-container_$VERSION.orig.tar.xz
-
-for i in `cat obs_working_dir/debian/patches/series`
-do
-    cp patches-4.9.x/$i obs_working_dir/debian/patches/
-done
-
-cp kernel-config-4.9.x obs_working_dir/debian/config
-cd obs_working_dir
-debuild -S -sa
+sed "s/\@VERSION\@/$VERSION/g" linux-container.dsc-template > linux-container.dsc
+sed "s/\@VERSION\@/$VERSION/g; s/\@KERNEL_SHA256\@/$kernel_sha256/g" _service-template > _service
 
 if [ $? = 0 ] && [ "$OBS_PUSH" = true ]
 then
     temp=$(basename $0)
     TMPDIR=$(mktemp -d -t ${temp}.XXXXXXXXXXX) || exit 1
-    cd ..
-    cc_kernel_dir=$(pwd)
-    rm obs_working_dir/debian/patches/*.patch
-    rm linux-container_$VERSION-${next_release}_source.build \
-    linux-container_$VERSION-${next_release}_source.changes
     osc co "$OBS_CC_KERNEL_REPO" -o $TMPDIR
+    mv linux-container.dsc \
+       linux-container.spec \
+        _service \
+        $TMPDIR
+    rm -f $TMPDIR/*.patch
+    rm -f $TMPDIR/linux-container_*
+    rm -f $TMPDIR/linux-*.tar.xz
+    rm -f $TMPDIR/debian.series
+    cp debian.changelog \
+        debian.dirs \
+        debian.rules \
+        debian.compat \
+        debian.control \
+        debian.copyright \
+        patches-4.9.x/*.patch \
+        config \
+        $TMPDIR
+    [ -f debian.series ] && cp debian.series $TMPDIR || :
     cd $TMPDIR
-    osc rm linux-*.tar.xz
-    osc rm linux-container*.dsc
-    rm *.patch
-    cp $cc_kernel_dir/patches-4.9.x/*.patch .
-    mv $cc_kernel_dir/linux-*.tar.xz .
-    mv $cc_kernel_dir/linux-container*.dsc .
-    mv $cc_kernel_dir/linux-container.spec .
-    cp $cc_kernel_dir/kernel-config-4.9.x config
     osc addremove
     osc commit -m "Update linux-container to: $VERSION-$next_release"
 fi
