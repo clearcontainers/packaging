@@ -12,6 +12,9 @@ auto-save-list
 tramp
 .\#*
 
+# vim swap file
+*.swp
+
 # Org-mode
 .org-id-locations
 *_archive
