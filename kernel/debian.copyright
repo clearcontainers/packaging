@@ -1,14 +1,14 @@
-This is the clearlinux.org prepackaged version of the Linux kernel.
+This is the clear containers prepackaged version of the Linux kernel.
 Linux was written by Linus Torvalds <Linus.Torvalds@cs.Helsinki.FI>
 and others.
 
-This package was put together by the clearlinux.org team, from
+This package was put together by the clear containers team, from
 sources retrieved from upstream linux git.
-The sources may be found at most Linux ftp sites, including
-ftp://ftp.kernel.org/pub/linux/kernel/
+The sources may be found at most Linux download websites, including
+https://www.kernel.org/pub/linux/kernel/
 
 This package is currently maintained by the
-clearlinux.org <dev@lists.clearlinux.org>
+clear containers team <cc-devl@lists.01.org>
 
 Linux is copyrighted by Linus Torvalds and others.
 
