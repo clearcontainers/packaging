@@ -1,3 +1,9 @@
+linux-container (4.9.45-77) stable; urgency=medium
+
+  * Update kernel 4.9.45
+
+ -- Eric Ernst <eric.ernst@intel.com>  Mon, 28 Aug 2017 17:17:09 -0500
+
 linux-container (4.9.35-62) stable; urgency=medium
 
   * Update kernel 4.9.35

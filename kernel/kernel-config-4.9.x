@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 4.9.4 Kernel Configuration
+# Linux/x86 4.9.45 Kernel Configuration
 #
 CONFIG_64BIT=y
 CONFIG_X86_64=y
@@ -1905,7 +1905,12 @@ CONFIG_OVERLAY_FS=y
 #
 # Caches
 #
-# CONFIG_FSCACHE is not set
+CONFIG_FSCACHE=y
+# CONFIG_FSCACHE_STATS is not set
+# CONFIG_FSCACHE_HISTOGRAM is not set
+# CONFIG_FSCACHE_DEBUG is not set
+# CONFIG_FSCACHE_OBJECT_LIST is not set
+# CONFIG_CACHEFILES is not set
 
 #
 # CD-ROM/DVD Filesystems
@@ -1947,6 +1952,7 @@ CONFIG_NETWORK_FILESYSTEMS=y
 # CONFIG_CODA_FS is not set
 # CONFIG_AFS_FS is not set
 CONFIG_9P_FS=y
+CONFIG_9P_FSCACHE=y
 CONFIG_9P_FS_POSIX_ACL=y
 CONFIG_9P_FS_SECURITY=y
 CONFIG_NLS=y
