@@ -2,28 +2,19 @@
 # -*- mode: shell-script; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
 # ex: ts=8 sw=4 sts=4 et filetype=sh
 
-# Automation script to create specs to build cc-oci-runtime
-# Default image to build is the one specified in file configure.ac
-# located at the root of the repository.
-set -x
+# Automation script to create specs to build clear containers kernel
+
+KR_REL=https://www.kernel.org/releases.json
+KR_SHA=https://cdn.kernel.org/pub/linux/kernel/v4.x/sha256sums.asc
+KR_LTS=4.9
+
 AUTHOR=${AUTHOR:-$(git config user.name)}
 AUTHOR_EMAIL=${AUTHOR_EMAIL:-$(git config user.email)}
-
-CC_VERSIONS_FILE="../versions.txt"
-source "$CC_VERSIONS_FILE"
-clear_vm_kernel_version=$(echo $clear_vm_kernel_version | cut -d'-' -f1)
-VERSION=${1:-$clear_vm_kernel_version}
 
 OBS_PUSH=${OBS_PUSH:-false}
 OBS_CC_KERNEL_REPO=${OBS_CC_KERNEL_REPO:-home:clearlinux:preview:clear-containers-staging/linux-container}
 
-git checkout debian.changelog
-last_release=$(awk 'NR==1{ gsub(".*-|\).*",""); print $0}' debian.changelog)
-next_release=$(( $last_release + 1 ))
-kernel_sha256=$(curl -s  https://cdn.kernel.org/pub/linux/kernel/v4.x/sha256sums.asc | awk '/linux-'${VERSION}'.tar.xz/ {print $1}')
-
-echo "Running: $0 $@"
-echo "Update linux-container to: $VERSION-$next_release"
+VERSION=${1:-latest}
 
 function changelog_update {
     d=$(date -R)
@@ -39,11 +30,27 @@ function changelog_update {
     rm debian.changelog-bk
 }
 
-changelog_update $VERSION
+echo "Running: $0 $@"
 
-sed "s/\@VERSION\@/$VERSION/g; s/\@RELEASE\@/$next_release/g" linux-container.spec-template > linux-container.spec
-sed "s/\@VERSION\@/$VERSION/g" linux-container.dsc-template > linux-container.dsc
-sed "s/\@VERSION\@/$VERSION/g; s/\@KERNEL_SHA256\@/$kernel_sha256/g" _service-template > _service
+git checkout -- release debian.changelog
+last_release=$(< release)
+next_release=$(( $last_release + 1 ))
+echo ${next_release} > release
+
+if [ "${VERSION}" = "latest" ]
+then
+    VERSION=$(curl -L -s -f ${KR_REL} | grep "${KR_LTS}" | grep version | cut -f 4 -d \")
+fi
+
+kernel_sha256=$(curl -L -s -f ${KR_SHA} | awk '/linux-'${VERSION}'.tar.xz/ {print $1}')
+
+echo "Update linux-container to: $VERSION-$next_release"
+
+changelog_update ${VERSION}
+
+sed "s/\@VERSION\@/${VERSION}/g; s/\@RELEASE\@/${next_release}/g" linux-container.spec-template > linux-container.spec
+sed "s/\@VERSION\@/${VERSION}/g" linux-container.dsc-template > linux-container.dsc
+sed "s/\@VERSION\@/${VERSION}/g; s/\@KERNEL_SHA256\@/${kernel_sha256}/g" _service-template > _service
 
 if [ $? = 0 ] && [ "$OBS_PUSH" = true ]
 then

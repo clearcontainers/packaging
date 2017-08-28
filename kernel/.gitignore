@@ -1,3 +1,5 @@
 linux-container_*
 linux-container.spec
 linux-*.tar.xz
+_service
+linux-container.dsc
