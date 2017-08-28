@@ -15,17 +15,19 @@ packages.
   * linux-container.spec
   * lnux-container_X.X.XX-XX.dsc
 
-By default, the script will get VERSION specified in the ``versions.txt`` file
-found at the the repository's root.
+By default, the script will get the latest 4.9 longterm kernel version from
+https://www.kernel.org. As an optional parameter you can pass any Linux
+``VERSION`` to the script and it will generate the respective packages.
 
-Open Build Service
-------------------
+## Open Build Service
 
 The script has two OBS related variables. Using them, the CI can push changes
-to the [OBS website] (https://build.opensuse.org/).
+to the [OBS website](https://build.opensuse.org/).
 
-  * ``OBS_PUSH`` default ``false``
-  * ``OBS_CC_KERNEL_REPO`` default ``home:clearlinux:preview:clear-containers-staging/linux-container``
+Environment variable | Default value
+---------------------|--------------
+``OBS_PUSH``           | **false**
+``OBS_CC_KERNEL_REPO`` | **home:clearlinux:preview:clear-containers-staging/linux-container**
 
 To push your changes and trigger a new build of the runtime to the OBS repo,
 set the variables in the environment running the script before calling
@@ -37,3 +39,32 @@ export OBS_CC_KERNEL_REPO=home:patux:clear-containers-2.1/linux-container
 
 ./update_kernel.sh [VERSION]
 ```
+
+## Update Sequence
+
+To update the Intel® Clear Containers kernel the next sequence is follow
+
+     ┌─────────────────────────┐                   ┌───┐          ┌─────────────────────┐
+     │clearcontainers/packaging│                   │OBS│          │clearcontainers/linux│
+     └────────────┬────────────┘                   └─┬─┘          └──────────┬──────────┘
+                  │     Test next build release      │                       │           
+                  │─────────────────────────────────>│                       │           
+                  │                                  │                       │           
+                  │            Build OK              │                       │           
+                  │<─────────────────────────────────│                       │           
+                  │                                  │                       │           
+                  │Build on clear-containers-staging │                       │           
+                  │─────────────────────────────────>│                       │           
+                  │                                  │                       │           
+                  │            Build OK              │                       │           
+                  │<─────────────────────────────────│                       │           
+                  │                                  │                       │           
+                  ────┐                              │                       │           
+                      │ Send PR of new kernel release│                       │           
+                  <───┘                              │                       │           
+                  │                                  │                       │           
+                  │                 Update with new release                  │           
+                  │─────────────────────────────────────────────────────────>│           
+     ┌────────────┴────────────┐                   ┌─┴─┐          ┌──────────┴──────────┐
+     │clearcontainers/packaging│                   │OBS│          │clearcontainers/linux│
+     └─────────────────────────┘                   └───┘          └─────────────────────┘
