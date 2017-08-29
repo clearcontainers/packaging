@@ -49,7 +49,7 @@ echo "Update linux-container to: $VERSION-$next_release"
 changelog_update ${VERSION}
 
 sed "s/\@VERSION\@/${VERSION}/g; s/\@RELEASE\@/${next_release}/g" linux-container.spec-template > linux-container.spec
-sed "s/\@VERSION\@/${VERSION}/g" linux-container.dsc-template > linux-container.dsc
+sed "s/\@VERSION\@/${VERSION}/g; s/\@RELEASE\@/${next_release}/g" linux-container.dsc-template > linux-container.dsc
 sed "s/\@VERSION\@/${VERSION}/g; s/\@KERNEL_SHA256\@/${kernel_sha256}/g" _service-template > _service
 
 if [ $? = 0 ] && [ "$OBS_PUSH" = true ]
