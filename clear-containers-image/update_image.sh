@@ -14,7 +14,7 @@ source "$CC_VERSIONS_FILE"
 VERSION=${1:-$clear_vm_image_version}
 
 OBS_PUSH=${OBS_PUSH:-false}
-OBS_CC_IMAGE_REPO=${OBS_CC_IMAGE_REPO:-home:clearlinux:preview:clear-containers-staging/clear-containers-image}
+OBS_CC_IMAGE_REPO=${OBS_CC_IMAGE_REPO:-home:clearcontainers:clear-containers-3-staging/clear-containers-image}
 
 git checkout obs_working_directory/debian/changelog
 last_release=`cat obs_working_directory/debian/changelog | head -1 | awk '{print $2}' | cut -d'-' -f2 | tr -d ')'`
