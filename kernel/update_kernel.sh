@@ -3,6 +3,7 @@
 # ex: ts=8 sw=4 sts=4 et filetype=sh
 
 # Automation script to create specs to build clear containers kernel
+set -x
 
 KR_REL=https://www.kernel.org/releases.json
 KR_SHA=https://cdn.kernel.org/pub/linux/kernel/v4.x/sha256sums.asc
@@ -72,8 +73,8 @@ then
         debian.control \
         debian.copyright \
         patches-4.9.x/*.patch \
-        config \
         $TMPDIR
+    cp kernel-config-4.9.x $TMPDIR/config
     [ -f debian.series ] && cp debian.series $TMPDIR || :
     cd $TMPDIR
     osc addremove
