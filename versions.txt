@@ -1,9 +1,9 @@
 cc_proxy_hash=817d71ef32e2ec7d4f2bcd93b49748bb88718832
 cc_runtime_hash=7bde8a9eb710dd9f090a680f1f6ba9ad86137a3b
-cc_shim_hash=ab14648926c47d7ebb02e0adba3e95ffbd20765e
+cc_shim_hash=1f545df3090f88d7dee251df7d51c542ac304adb
 cc_proxy_version=3.0.0-beta.1
 cc_runtime_version=3.0.0-beta.1
-cc_shim_version=3.0.0-alpha.4
+cc_shim_version=3.0.0-beta.2
 clear_vm_kernel_version=4.9.47-77
 clear_vm_image_version=17270
 qemu_lite_version=741f430a960b5b67745670e8270db91aeb083c5f
