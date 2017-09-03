@@ -4,7 +4,7 @@ cc_shim_hash=ab14648926c47d7ebb02e0adba3e95ffbd20765e
 cc_proxy_version=3.0.0-beta.1
 cc_runtime_version=3.0.0-beta.1
 cc_shim_version=3.0.0-alpha.4
-clear_vm_kernel_version=4.9.35-76
+clear_vm_kernel_version=4.9.47-77
 clear_vm_image_version=17270
 qemu_lite_version=741f430a960b5b67745670e8270db91aeb083c5f
 
