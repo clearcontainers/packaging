@@ -1,3 +1,9 @@
+cc-proxy (3.0.0-beta.2) stable; urgency=medium
+
+  * Update cc-proxy 3.0.0-beta.2 c0805cc
+
+ -- Geronimo Orozco <geronimo.orozco@intel.com>  Sun, 03 Sep 2017 16:10:39 -0500
+
 cc-proxy (3.0.0-beta.1) stable; urgency=medium
 
   * Update cc-proxy 3.0.0-beta.1 817d71e
