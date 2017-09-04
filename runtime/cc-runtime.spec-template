@@ -17,8 +17,6 @@ Summary  : No detailed summary available
 Group    : Development/Tools
 License  : Apache-2.0
 
-BuildRequires: gcc
-BuildRequires: glibc-static
 BuildRequires: git
 Requires: cc-runtime-bin
 Requires: cc-runtime-config
