@@ -1,3 +1,9 @@
+cc-runtime (3.0.0-beta.2) stable; urgency=medium
+
+  * Update cc-runtime 3.0.0-beta.2 06023ea
+
+ -- Geronimo Orozco <geronimo.orozco@intel.com>  Sun, 03 Sep 2017 16:50:52 -0500
+
 cc-runtime (3.0.0-beta.1) stable; urgency=medium
 
   * Update cc-runtime 3.0.0-beta.1 7bde8a9
