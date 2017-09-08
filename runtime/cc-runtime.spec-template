@@ -26,6 +26,15 @@ Requires: linux-container >= @linux_container_version@
 Requires: cc-proxy >= @cc_proxy_version@
 Requires: cc-shim >= @cc_shim_version@
 
+Conflicts: cc-oci-runtime
+Conflicts: cc-oci-runtime-bin
+Conflicts: cc-oci-runtime-config
+Conflicts: cc-oci-runtime-data
+Obsoletes: cc-oci-runtime
+Obsoletes: cc-oci-runtime-bin
+Obsoletes: cc-oci-runtime-config
+Obsoletes: cc-oci-runtime-data
+
 %description
 .. contents::
 .. sectnum::

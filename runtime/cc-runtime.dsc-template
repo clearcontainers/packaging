@@ -15,19 +15,22 @@ Architecture: amd64
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${perl:Depends}, cc-runtime-bin, cc-runtime-config, qemu-lite (>= @qemu_lite_version@),
                           clear-containers-image (>= @cc_image_version@), linux-container (>= @linux_container_version@),
 			  cc-proxy (>= @cc_proxy_version@), cc-shim (>= @cc_shim_version@)
+Provides: cc-oci-runtime
+Conflicts: cc-oci-runtime
+Replaces: cc-oci-runtime
 Description:
  An Open Containers Initiative (OCI) "runtime" that launches an Intel VT-x secured Clear Containers 3.0 hypervisor, rather than a standard Linux container.
 
 Package: cc-runtime-bin
 Architecture: amd64
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${perl:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${perl:Depends}, cc-runtime
 Description:
  An Open Containers Initiative (OCI) "runtime" that launches an Intel VT-x secured Clear Containers 3.0 hypervisor, rather than a standard Linux container.
  This package contain the cc-runtime and the pause binaries.
 
 Package: cc-runtime-config
 Architecture: amd64
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${perl:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${perl:Depends}, cc-runtime
 Description:
  An Open Containers Initiative (OCI) "runtime" that launches an Intel VT-x secured Clear Containers 3.0 hypervisor, rather than a standard Linux container.
  This package contain the configuration file.
