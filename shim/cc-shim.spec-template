@@ -8,15 +8,18 @@
 Name:      cc-shim
 Version:   @VERSION@
 Release:   0
+Summary  : No detailed summary available
+Group    : Development/Tools
+License  : Apache-2.0
 Source0:   %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: autoconf
 BuildRequires: automake
-Summary  : No detailed summary available
-Group    : Development/Tools
-License  : Apache-2.0
-
 Requires: cc-shim-bin
+
+%if 0%{?is_opensuse}
+Patch69: 69.patch
+%endif
 
 %description
 .. contents::
@@ -35,6 +38,10 @@ bin components for the cc-oci-shim package.
 
 %prep
 %setup -q
+
+%if 0%{?is_opensuse}
+%patch69 -p1
+%endif
 
 %build
 ./autogen.sh --libexecdir=%{LIBEXECDIR}/clear-containers
