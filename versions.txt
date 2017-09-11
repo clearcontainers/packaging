@@ -19,11 +19,11 @@ shim_obs_fedora_version=3.0.0beta.2+git.1f545df-1.1
 image_obs_fedora_version=17270-34.1
 selinux_obs_fedora_version=0.1-4.1
 linux_container_obs_fedora_version=4.9.47-77.1
-qemu_lite_obs_fedora_version=2.7.1+git.741f430a96-6.1
+qemu_lite_obs_fedora_version=2.7.1+git.741f430a96-7.1
 
 # Ubuntu
 proxy_obs_ubuntu_version=3.0.0beta.2+git.c0805cc-0+2.1
 shim_obs_ubuntu_version=3.0.0beta.2+git.1f545df-0+1.1
 image_obs_ubuntu_version=17270-25
 linux_container_obs_ubuntu_version=4.9.47-77
-qemu_lite_obs_ubuntu_version=2.7.1+git.741f430a96-6.1
+qemu_lite_obs_ubuntu_version=2.7.1+git.741f430a96-0+7.1
