@@ -11,22 +11,29 @@ AUTHOR_EMAIL=${AUTHOR_EMAIL:-$(git config user.email)}
 
 source ../versions.txt
 VERSION=${1:-$cc_shim_version}
+# 3.0.0-beta.X format cause errors while packaging.
+# Remove the dash in order to be able to build. The
+# original string will remain in the packages and
+# in the binary's version.
+DASHLESS_VERSION=$(echo $VERSION | tr -d '-')
 
 # If we are providing the branch or hash to build we'll take version as the hashtag
 [ -n "$1" ] && hash_tag=$VERSION || hash_tag=$cc_shim_hash
 short_hashtag="${hash_tag:0:7}"
 
+# When building from hash, the first character of the hash is replaced by a "1".
+# This is because spec files rejects versions starting with letters. 
 if [[ ${VERSION::1} =~ [a-z] ]]; then
     ORIGINAL_VERSION=$VERSION
     VERSION=1${VERSION:1}
 fi
-VERSION_DEB_TRANSFORM=$(echo $VERSION | tr -d '-')
 
 OBS_PUSH=${OBS_PUSH:-false}
 OBS_SHIM_REPO=${OBS_SHIM_REPO:-home:clearcontainers:clear-containers-3-staging/cc-shim}
 : ${OBS_APIURL:=""}
 
-if [ $OBS_APIURL != '' ]; then
+# This allows to point to internal/private OBS instance
+if [ "$OBS_APIURL" != "" ]; then
     APIURL="-A ${OBS_APIURL}"
 else
     APIURL=""
@@ -50,9 +57,22 @@ function changelog_update {
 }
 changelog_update $VERSION
 
-sed "s/@VERSION@/$VERSION/g;" cc-shim.spec-template > cc-shim.spec
-sed -e "s/@VERSION_DEB_TRANSFORM@/$VERSION_DEB_TRANSFORM/g;" -e "s/@HASH_TAG@/$short_hashtag/g;" cc-shim.dsc-template > cc-shim.dsc
-sed -e "s/@VERSION_DEB_TRANSFORM@/$VERSION_DEB_TRANSFORM/g;" -e "s/@HASH_TAG@/$short_hashtag/g;" debian.control-template > debian.control
+RELEASE=$(($(cat release) + 1))
+echo $RELEASE > release
+
+sed -e "s/@DASHLESS_VERSION@/$DASHLESS_VERSION/g" \
+    -e "s/@RELEASE@/$RELEASE/g" \
+    -e "s/@HASH@/$short_hashtag/g" cc-shim.spec-template > cc-shim.spec
+
+sed -e "s/@HASH@/$short_hashtag/" debian.rules-template > debian.rules
+
+sed -e "s/@VERSION@/$VERSION/g" \
+    -e "s/@HASH@/$short_hashtag/g" \
+    -e "s/@RELEASE@/$RELEASE/g" \
+    -e "s/@DASHLESS_VERSION@/$DASHLESS_VERSION/g" cc-shim.dsc-template > cc-shim.dsc
+
+sed -e "s/@DASHLESS_VERSION@/$DASHLESS_VERSION/g" \
+    -e "s/@HASH@/$short_hashtag/g" debian.control-template > debian.control
 
 if [ -z "$ORIGINAL_VERSION" ]; then
     sed "s/@VERSION@/$VERSION/g;" _service-template > _service
@@ -66,17 +86,18 @@ fi
 if [ "$OBS_PUSH" = true ]
 then
     temp=$(basename $0)
-    TMPDIR=$(mktemp -d -t ${temp}.XXXXXXXXXXX) || exit 1
+    TMPDIR=$(mktemp -d -u -t ${temp}.XXXXXXXXXXX) || exit 1
     osc $APIURL co "$OBS_SHIM_REPO" -o $TMPDIR
+
     mv cc-shim.spec \
         cc-shim.dsc \
         _service \
         debian.control \
+        debian.rules \
         $TMPDIR
     rm $TMPDIR/*.patch
     [ -f $TMPDIR/debian.series ] && rm $TMPDIR/debian.series || :
     cp debian.changelog \
-        debian.rules \
         debian.compat \
         *.patch \
         $TMPDIR

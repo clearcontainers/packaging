@@ -6,8 +6,8 @@
 
 %undefine _missing_build_ids_terminate_build
 Name:      cc-shim
-Version:   @VERSION@
-Release:   0
+Version:   @DASHLESS_VERSION@+git.@HASH@
+Release:   @RELEASE@.<B_CNT>
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : Apache-2.0
@@ -45,7 +45,7 @@ bin components for the cc-oci-shim package.
 
 %build
 ./autogen.sh --libexecdir=%{LIBEXECDIR}/clear-containers
-make DESTDIR=%{buildroot}
+make DESTDIR=%{buildroot} GIT_COMMIT=@HASH@
 
 %check
 export http_proxy=http://127.0.0.1:9/

@@ -5,7 +5,7 @@ export DEB_BUILD_OPTIONS=nocheck
 
 override_dh_auto_build:
 	./autogen.sh
-	make
+	make GIT_COMMIT=@HASH@
 
 override_dh_auto_install:
 	mkdir -p debian/cc-shim
