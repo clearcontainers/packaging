@@ -17,9 +17,10 @@ override_dh_auto_build:
 	ln -s /usr/src/packages/BUILD /usr/src/packages/BUILD/go/src/github.com/clearcontainers/runtime
 	cd $(GOPATH)/src/github.com/clearcontainers/runtime/; \
 	make DESTCONFIG=/etc/clear-containers/configuration.toml PREFIX=/usr SYSCONFDIR=/etc \
-	LOCALSTATEDIR=/var SHAREDIR=/usr/share
+	LOCALSTATEDIR=/var SHAREDIR=/usr/share VERSION=@VERSION@ COMMIT=@HASH@
 
 override_dh_auto_install:
 	mkdir -p debian/cc-runtime
 	cd $(GOPATH)/src/github.com/clearcontainers/runtime/; \
-	make install DESTDIR=`pwd`/debian/cc-runtime PREFIX=/usr SYSCONFDIR=/etc LOCALSTATEDIR=/var SHAREDIR=/usr/share
+	make install DESTDIR=`pwd`/debian/cc-runtime PREFIX=/usr SYSCONFDIR=/etc LOCALSTATEDIR=/var \
+        SHAREDIR=/usr/share VERSION=@VERSION@ COMMIT=@HASH@
