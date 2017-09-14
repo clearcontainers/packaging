@@ -1,0 +1,25 @@
+From 2309a075e5ef0a2a6ede837a936b5308dd307c1e Mon Sep 17 00:00:00 2001
+From: Geronimo Orozco <geronimo.orozco@intel.com>
+Date: Wed, 20 Sep 2017 09:53:35 -0500
+Subject: [PATCH] VERSION: Update version to 2.7.1
+
+The version shown when running qemu-lite was 2.7.0 instead of the
+current we are building 2.7.1.
+
+Related:
+https://github.com/clearcontainers/packaging/pull/99
+https://github.com/clearcontainers/qemu/issues/3
+https://github.com/clearcontainers/qemu/issues/2
+
+Signed-off-by: Geronimo Orozco <geronimo.orozco@intel.com>
+---
+ VERSION | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/VERSION b/VERSION
+index 24ba9a38de..860487ca19 100644
+--- a/VERSION
++++ b/VERSION
+@@ -1 +1 @@
+-2.7.0
++2.7.1

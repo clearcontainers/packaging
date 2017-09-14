@@ -1,6 +1,7 @@
+%global qemu_lite_hash @QEMU_LITE_HASH@
 Name: qemu-lite
-Version: 2.7.1
-Release: 0
+Version: @VERSION@+git.%{qemu_lite_hash}
+Release: @RELEASE@.<B_CNT>
 Source0:   %{name}-%{version}.tar.gz
 Source1: qemu-lite-rpmlintrc
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}
@@ -30,6 +31,7 @@ BuildRequires : python-devel
 BuildRequires : zlib-devel
 BuildRequires : pkgconfig(pixman-1)
 Patch1: configure.patch
+Patch7: version.patch
 
 %description
 ===========
@@ -56,6 +58,7 @@ data components for the qemu-lite package.
 %prep
 %setup -q
 %patch1 -p1
+%patch7 -p1
 
 %build
 export LANG=C
@@ -105,6 +108,7 @@ export LANG=C
 --datadir=/usr/share/qemu-lite \
 --libdir=/usr/lib64/qemu-lite \
 --libexecdir=/usr/libexec/qemu-lite \
+--with-pkgversion=%{version}-%{release}.cc \
 --enable-vhost-net \
 --disable-docs
 make V=1  %{?_smp_mflags}
