@@ -88,7 +88,7 @@ export GOPATH=$HOME/rpmbuild/BUILD/go/
 
 cd $HOME/rpmbuild/BUILD/go/src/%{IMPORTNAME}
 make install DESTDIR=%{buildroot} PREFIX=/usr SYSCONFDIR=/etc LOCALSTATEDIR=/var SHAREDIR=/usr/share \
-     VERSION=@VERSION@ COMMIT=@HASH@
+     VERSION=@VERSION@ COMMIT=@HASH@ BASH_COMPLETIONSDIR=%{buildroot}/usr/share/bash-completion/completions/cc-runtime
 
 %files
 %defattr(-,root,root,-)
@@ -102,6 +102,9 @@ make install DESTDIR=%{buildroot} PREFIX=/usr SYSCONFDIR=/etc LOCALSTATEDIR=/var
 /var/lib/clear-containers/runtime/bundles/pause_bundle
 /var/lib/clear-containers/runtime/bundles/pause_bundle/bin
 /var/lib/clear-containers/runtime/bundles/pause_bundle/bin/pause
+/usr/share/bash-completion
+/usr/share/bash-completion/completions
+/usr/share/bash-completion/completions/cc-runtime
 
 %files config
 %defattr(-,root,root,-)
