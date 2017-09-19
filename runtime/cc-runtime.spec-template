@@ -9,8 +9,8 @@
 %undefine _missing_build_ids_terminate_build
 %define  debug_package %{nil}
 Name:      cc-runtime
-Version:   @VERSION@
-Release:   0
+Version:   @DASHLESS_VERSION@+git.@HASH@
+Release:   @RELEASE@.<B_CNT>
 Source0:   %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Summary  : No detailed summary available
@@ -69,12 +69,12 @@ tar -C local -xzf ../SOURCES/go%{GO_VERSION}.linux-amd64.tar.gz
 export GOROOT=$HOME/rpmbuild/BUILD/local/go
 export PATH=$PATH:$HOME/rpmbuild/BUILD/local/go/bin
 export GOPATH=$HOME/rpmbuild/BUILD/go/
-export COMMIT=%{version}
 
 mkdir -p $HOME/rpmbuild/BUILD/go/src/%{DOMAIN}/%{ORG}
 ln -s $HOME/rpmbuild/BUILD/cc-runtime-%{version} $HOME/rpmbuild/BUILD/go/src/%{IMPORTNAME}
 cd $HOME/rpmbuild/BUILD/go/src/%{IMPORTNAME}
-make DESTCONFIG=/etc/clear-containers/configuration.toml PREFIX=/usr SYSCONFDIR=/etc LOCALSTATEDIR=/var SHAREDIR=/usr/share
+make DESTCONFIG=/etc/clear-containers/configuration.toml PREFIX=/usr SYSCONFDIR=/etc \
+     LOCALSTATEDIR=/var SHAREDIR=/usr/share VERSION=@VERSION@ COMMIT=@HASH@
 
 %check
 export http_proxy=http://127.0.0.1:9/
@@ -85,10 +85,10 @@ export no_proxy=localhost
 export GOROOT=$HOME/rpmbuild/BUILD/local/go
 export PATH=$PATH:$HOME/rpmbuild/BUILD/local/go/bin
 export GOPATH=$HOME/rpmbuild/BUILD/go/
-export COMMIT=%{version}
 
 cd $HOME/rpmbuild/BUILD/go/src/%{IMPORTNAME}
-make install DESTDIR=%{buildroot} PREFIX=/usr SYSCONFDIR=/etc LOCALSTATEDIR=/var SHAREDIR=/usr/share
+make install DESTDIR=%{buildroot} PREFIX=/usr SYSCONFDIR=/etc LOCALSTATEDIR=/var SHAREDIR=/usr/share \
+     VERSION=@VERSION@ COMMIT=@HASH@
 
 %files
 %defattr(-,root,root,-)

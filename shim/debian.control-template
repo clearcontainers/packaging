@@ -5,8 +5,7 @@ Maintainer: clearlinux.org team <dev@lists.clearlinux.org>
 Standards-Version: 3.9.6
 Homepage: https://clearlinux.org/features/clear-containers
 Build-Depends: debhelper (>= 9), git, ca-certificates, dh-modaliases, execstack, devscripts, dh-make
-Debtransform-Tar: cc-shim-@VERSION_DEB_TRANSFORM@+git.@HASH_TAG@.tar.gz
-DEBTRANSFORM-RELEASE: 1
+Debtransform-Tar: cc-shim-@DASHLESS_VERSION@+git.@HASH@.tar.gz
 
 Package: cc-shim
 Architecture: amd64
