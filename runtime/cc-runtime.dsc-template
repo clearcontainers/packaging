@@ -7,11 +7,11 @@ Maintainer: clearlinux.org team <dev@lists.clearlinux.org>
 Standards-Version: 3.9.6
 Build-Depends: dh-make, git, ca-certificates, execstack, devscripts, debhelper, build-essential, dh-autoreconf, make, dh-modaliases
 Homepage: https://clearlinux.org/features/clear-containers
-Debtransform-Tar: cc-runtime-@DASHLESS_VERSION@+git.@HASH@.tar.gz
+Debtransform-Tar: cc-runtime-@VERSION@+git.@HASH@.tar.gz
 
 Package: cc-runtime
 Architecture: amd64
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${perl:Depends}, cc-runtime-bin, cc-runtime-config, qemu-lite (>= @qemu_lite_version@),
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${perl:Depends}, cc-runtime-bin, cc-runtime-config, qemu-lite (>= @qemu_lite_obs_ubuntu_version@),
                           clear-containers-image (>= @cc_image_version@), linux-container (>= @linux_container_version@),
 			  cc-proxy (>= @cc_proxy_version@), cc-shim (>= @cc_shim_version@)
 Provides: cc-oci-runtime

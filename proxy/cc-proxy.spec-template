@@ -14,7 +14,7 @@
 
 %undefine _missing_build_ids_terminate_build
 Name:      cc-proxy
-Version:   @DASHLESS_VERSION@+git.@HASH@
+Version:   @VERSION@+git.@HASH@
 Release:   @RELEASE@.<B_CNT>
 Source0:   %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -72,7 +72,7 @@ export GOPATH=$HOME/rpmbuild/BUILD/go/
 mkdir -p $HOME/rpmbuild/BUILD/go/src/%{DOMAIN}/%{ORG}
 ln -s %{_builddir}/%{name}-%{version} $HOME/rpmbuild/BUILD/go/src/%{IMPORTNAME}
 cd $HOME/rpmbuild/BUILD/go/src/%{IMPORTNAME}
-make LIBEXECDIR=%{LIBEXECDIR} VERSION=@VERSION@
+make LIBEXECDIR=%{LIBEXECDIR} VERSION=@VERSION_STRING@
 
 %check
 export http_proxy=http://127.0.0.1:9/
@@ -80,7 +80,7 @@ export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost
 
 %install
-make install DESTDIR=%{buildroot} LIBEXECDIR=%{LIBEXECDIR} VERSION=@VERSION@
+make install DESTDIR=%{buildroot} LIBEXECDIR=%{LIBEXECDIR} VERSION=@VERSION_STRING@
 
 %files
 %defattr(-,root,root,-)

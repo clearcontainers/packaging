@@ -9,7 +9,7 @@
 %undefine _missing_build_ids_terminate_build
 %define  debug_package %{nil}
 Name:      cc-runtime
-Version:   @DASHLESS_VERSION@+git.@HASH@
+Version:   @VERSION@+git.@HASH@
 Release:   @RELEASE@.<B_CNT>
 Source0:   %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -20,7 +20,7 @@ License  : Apache-2.0
 BuildRequires: git
 Requires: cc-runtime-bin
 Requires: cc-runtime-config
-%{!?el7:Requires: qemu-lite }
+%{!?el7:Requires: qemu-lite >= @qemu_lite_obs_fedora_version@ }
 Requires: clear-containers-image >= @cc_image_version@
 Requires: linux-container >= @linux_container_version@
 Requires: cc-proxy >= @cc_proxy_version@
@@ -73,7 +73,7 @@ export GOPATH=$HOME/rpmbuild/BUILD/go/
 mkdir -p $HOME/rpmbuild/BUILD/go/src/%{DOMAIN}/%{ORG}
 ln -s $HOME/rpmbuild/BUILD/cc-runtime-%{version} $HOME/rpmbuild/BUILD/go/src/%{IMPORTNAME}
 cd $HOME/rpmbuild/BUILD/go/src/%{IMPORTNAME}
-make DESTCONFIG=/etc/clear-containers/configuration.toml PREFIX=/usr SYSCONFDIR=/etc \
+make PREFIX=/usr SYSCONFDIR=/etc \
      LOCALSTATEDIR=/var SHAREDIR=/usr/share VERSION=@VERSION@ COMMIT=@HASH@
 
 %check
@@ -88,7 +88,8 @@ export GOPATH=$HOME/rpmbuild/BUILD/go/
 
 cd $HOME/rpmbuild/BUILD/go/src/%{IMPORTNAME}
 make install DESTDIR=%{buildroot} PREFIX=/usr SYSCONFDIR=/etc LOCALSTATEDIR=/var SHAREDIR=/usr/share \
-     VERSION=@VERSION@ COMMIT=@HASH@ BASH_COMPLETIONSDIR=%{buildroot}/usr/share/bash-completion/completions/cc-runtime
+     VERSION=@VERSION@ COMMIT=@HASH@ BASH_COMPLETIONSDIR=%{buildroot}/usr/share/bash-completion/completions/cc-runtime \
+     DESTCONFIG=%{buildroot}/etc/clear-containers/configuration.toml
 
 %files
 %defattr(-,root,root,-)

@@ -11,11 +11,6 @@ AUTHOR_EMAIL=${AUTHOR_EMAIL:-$(git config user.email)}
 
 source ../versions.txt
 VERSION=${1:-$cc_proxy_version}
-# 3.0.0-beta.X format cause errors while packaging.
-# Remove the dash in order to be able to build. The
-# original string will remain in the packages and
-# in the binary's version.
-DASHLESS_VERSION=$(echo $VERSION | tr -d '-')
 
 # If we are providing the branch or hash to build we'll take version as the hashtag
 [ -n "$1" ] && hash_tag=$VERSION || hash_tag=$cc_proxy_hash
@@ -58,19 +53,18 @@ changelog_update $VERSION
 RELEASE=$(($(cat release) + 1))
 echo $RELEASE > release
 
-sed -e "s/@DASHLESS_VERSION@/$DASHLESS_VERSION/g" \
+sed -e "s/@VERSION@/$VERSION/g" \
     -e "s/@RELEASE@/$RELEASE/g" \
     -e "s/@HASH@/$short_hashtag/g" \
-    -e "s/@VERSION@/${VERSION}-${short_hashtag}/g" cc-proxy.spec-template > cc-proxy.spec
+    -e "s/@VERSION_STRING@/${VERSION}+git.${short_hashtag}/g" cc-proxy.spec-template > cc-proxy.spec
 
-sed -e "s/@VERSION@/${VERSION}-${short_hashtag}/" debian.rules-template > debian.rules
+sed -e "s/@VERSION_STRING@/${VERSION}+git.${short_hashtag}/" debian.rules-template > debian.rules
 
-sed -e "s/@DASHLESS_VERSION@/$DASHLESS_VERSION/g" \
-    -e "s/@VERSION@/$VERSION/g" \
+sed -e "s/@VERSION@/$VERSION/g" \
     -e "s/@HASH@/$short_hashtag/g" \
     -e "s/@RELEASE@/$RELEASE/g" cc-proxy.dsc-template > cc-proxy.dsc
 
-sed -e "s/@DASHLESS_VERSION@/$DASHLESS_VERSION/g" debian.control-template > debian.control
+sed -e "s/@VERSION@/$VERSION/g" debian.control-template > debian.control
 
 if [ -z "$ORIGINAL_VERSION" ]; then
     sed "s/@VERSION@/$VERSION/g;" _service-template > _service
