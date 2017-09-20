@@ -51,7 +51,9 @@ override_dh_auto_configure:
 	--datadir=/usr/share/qemu-lite \
 	--libdir=/usr/lib64/qemu-lite \
 	--libexecdir=/usr/libexec/qemu-lite \
-	--enable-vhost-net	
+	--with-pkgversion=@VERSION@+git.@QEMU_LITE_HASH@-@RELEASE@.cc \
+	--enable-vhost-net \
+	--disable-docs
 
 override_dh_auto_build:
 	make
