@@ -1,3 +1,9 @@
+cc-shim (3.0.0) stable; urgency=medium
+
+  * Update cc-shim 3.0.0 739e5e2
+
+ -- Erick Cardona <erick.cardona.ruiz@intel.com>  Wed, 20 Sep 2017 14:16:47 +0000
+
 cc-shim (3.0.0-beta.2) stable; urgency=medium
 
   * Update cc-shim 3.0.0-beta.2 1f545df

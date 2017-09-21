@@ -5,7 +5,7 @@ Maintainer: clearlinux.org team <dev@lists.clearlinux.org>
 Standards-Version: 3.9.6
 Homepage: https://clearlinux.org/features/clear-containers
 Build-Depends: dh-make, git, ca-certificates, execstack, devscripts, debhelper, build-essential, dh-autoreconf, make, dh-modaliases
-Debtransform-Tar: cc-proxy-@DASHLESS_VERSION@+git.@HASH@.tar.gz
+Debtransform-Tar: cc-proxy-@VERSION@+git.@HASH@.tar.gz
 
 Package: cc-proxy
 Architecture: amd64

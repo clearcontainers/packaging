@@ -13,8 +13,8 @@ override_dh_auto_build:
 	mkdir -p /usr/src/packages/BUILD/go/src/github.com/clearcontainers/
 	tar xzf /usr/src/packages/SOURCES/go1.8.3.linux-amd64.tar.gz -C /usr/src/packages/BUILD/local/
 	ln -s /usr/src/packages/BUILD/ /usr/src/packages/BUILD/go/src/github.com/clearcontainers/proxy
-	cd $(GOPATH)/src/github.com/clearcontainers/proxy && make VERSION=@VERSION@
+	cd $(GOPATH)/src/github.com/clearcontainers/proxy && make VERSION=@VERSION_STRING@
 
 override_dh_auto_install:
 	mkdir debian/cc-proxy
-	make install DESTDIR=`pwd`/debian/cc-proxy UNIT_DIR=/usr/lib/systemd/system VERSION=@VERSION@
+	make install DESTDIR=`pwd`/debian/cc-proxy UNIT_DIR=/usr/lib/systemd/system VERSION=@VERSION_STRING@

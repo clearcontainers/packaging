@@ -16,11 +16,12 @@ override_dh_auto_build:
 	tar xzf /usr/src/packages/SOURCES/go1.8.3.linux-amd64.tar.gz -C /usr/src/packages/BUILD/local
 	ln -s /usr/src/packages/BUILD /usr/src/packages/BUILD/go/src/github.com/clearcontainers/runtime
 	cd $(GOPATH)/src/github.com/clearcontainers/runtime/; \
-	make DESTCONFIG=/etc/clear-containers/configuration.toml PREFIX=/usr SYSCONFDIR=/etc \
+	make PREFIX=/usr SYSCONFDIR=/etc \
 	LOCALSTATEDIR=/var SHAREDIR=/usr/share VERSION=@VERSION@ COMMIT=@HASH@
 
 override_dh_auto_install:
 	mkdir -p debian/cc-runtime
 	cd $(GOPATH)/src/github.com/clearcontainers/runtime/; \
 	make install DESTDIR=$(shell pwd)/debian/cc-runtime PREFIX=/usr SYSCONFDIR=/etc LOCALSTATEDIR=/var \
-        SHAREDIR=/usr/share VERSION=@VERSION@ COMMIT=@HASH@ BASH_COMPLETIONSDIR=$(shell pwd)/debian/cc-runtime/usr/share/bash-completion/completions/cc-runtime
+        SHAREDIR=/usr/share VERSION=@VERSION@ COMMIT=@HASH@ BASH_COMPLETIONSDIR=$(shell pwd)/debian/cc-runtime/usr/share/bash-completion/completions/cc-runtime \
+        DESTCONFIG=$(shell pwd)/debian/cc-runtime/etc/clear-containers/configuration.toml

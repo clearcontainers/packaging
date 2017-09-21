@@ -11,11 +11,6 @@ AUTHOR_EMAIL=${AUTHOR_EMAIL:-$(git config user.email)}
 
 source ../versions.txt
 VERSION=${1:-$cc_runtime_version}
-# 3.0.0-beta.X format cause errors while packaging.
-# Remove the dash in order to be able to build. The
-# original string will remain in the packages and
-# in the binary's version.
-DASHLESS_VERSION=$(echo $VERSION | tr -d '-')
 
 # If we are providing the branch or hash to build we'll take version as the hashtag
 [ -n "$1" ] && hash_tag=$VERSION || hash_tag=$cc_runtime_hash
@@ -60,35 +55,36 @@ RELEASE=$(($(cat release) + 1))
 echo $RELEASE > release
 
 function templating_non_staging(){
-    sed -e "s/@DASHLESS_VERSION@/$DASHLESS_VERSION/g" \
+    sed -e "s/@VERSION@/$VERSION/g" \
         -e "s/@RELEASE@/$RELEASE/g" \
-        -e "s/@VERSION@/$VERSION/g" \
         -e "s/@HASH@/$short_hashtag/g" \
         -e "s/@cc_proxy_version@/$proxy_obs_fedora_version/" \
         -e "s/@cc_shim_version@/$shim_obs_fedora_version/" \
         -e "s/@cc_image_version@/$image_obs_fedora_version/" \
-        -e "s/@linux_container_version@/$linux_container_obs_fedora_version/" cc-runtime.spec-template > cc-runtime.spec
+        -e "s/@linux_container_version@/$linux_container_obs_fedora_version/" \
+        -e "s/@qemu_lite_obs_fedora_version@/$qemu_lite_obs_fedora_version/g" cc-runtime.spec-template > cc-runtime.spec
 
     sed -e "s/@VERSION@/$VERSION/" \
         -e "s/@HASH@/$short_hashtag/" debian.rules-template > debian.rules
 
     sed -e "s/@VERSION@/$VERSION/g"\
         -e "s/@RELEASE@/$RELEASE/g" \
-        -e "s/@DASHLESS_VERSION@/$DASHLESS_VERSION/g" \
         -e "s/@HASH@/$short_hashtag/g" \
         -e "s/@cc_proxy_version@/$proxy_obs_ubuntu_version/" \
         -e "s/@cc_shim_version@/$shim_obs_ubuntu_version/" \
         -e "s/@cc_image_version@/$image_obs_ubuntu_version/" \
         -e "s/@qemu_lite_version@/$qemu_lite_obs_ubuntu_version/" \
-        -e "s/@linux_container_version@/$linux_container_obs_ubuntu_version/" cc-runtime.dsc-template > cc-runtime.dsc
+        -e "s/@linux_container_version@/$linux_container_obs_ubuntu_version/" \
+        -e "s/@qemu_lite_obs_ubuntu_version@/$qemu_lite_obs_ubuntu_version/" cc-runtime.dsc-template > cc-runtime.dsc
 
-    sed -e "s/@DASHLESS_VERSION@/$DASHLESS_VERSION/" \
+    sed -e "s/@VERSION@/$VERSION/" \
         -e "s/@HASH_TAG@/$short_hashtag/" \
         -e "s/@cc_proxy_version@/$proxy_obs_ubuntu_version/" \
         -e "s/@cc_shim_version@/$shim_obs_ubuntu_version/" \
         -e "s/@cc_image_version@/$image_obs_ubuntu_version/" \
         -e "s/@qemu_lite_version@/$qemu_lite_obs_ubuntu_version/" \
-        -e "s/@linux_container_version@/$linux_container_obs_ubuntu_version/" debian.control-template > debian.control
+        -e "s/@linux_container_version@/$linux_container_obs_ubuntu_version/" \
+        -e "s/@qemu_lite_obs_ubuntu_version@/$qemu_lite_obs_ubuntu_version/"  debian.control-template > debian.control
 
     if [ -z "$ORIGINAL_VERSION" ]; then
         sed "s/@VERSION@/$VERSION/g;" _service-template > _service
@@ -100,9 +96,8 @@ function templating_non_staging(){
 }
 
 function templating_staging(){
-    sed -e "s/@DASHLESS_VERSION@/$DASHLESS_VERSION/g" \
+    sed -e "s/@VERSION@/$VERSION/g" \
         -e "s/@RELEASE@/$RELEASE/g" \
-        -e "s/@VERSION@/$VERSION/g" \
         -e "s/@HASH@/$short_hashtag/g"  cc-runtime.spec-template > cc-runtime.spec
 
     sed -e "s/@VERSION@/$VERSION/g" \
@@ -110,10 +105,9 @@ function templating_staging(){
 
     sed -e "s/@VERSION@/$VERSION/"\
         -e "s/@RELEASE@/$RELEASE/" \
-        -e "s/@DASHLESS_VERSION@/$DASHLESS_VERSION/" \
         -e "s/@HASH@/$short_hashtag/"  cc-runtime.dsc-template > cc-runtime.dsc
 
-    sed -e "s/@DASHLESS_VERSION@/$DASHLESS_VERSION/" \
+    sed -e "s/@VERSION@/$VERSION/" \
         -e "s/@HASH_TAG@/$short_hashtag/"  debian.control-template > debian.control
 
     if [ -z "$ORIGINAL_VERSION" ]; then
