@@ -76,8 +76,12 @@ export GOPATH=$HOME/rpmbuild/BUILD/go/
 mkdir -p $HOME/rpmbuild/BUILD/go/src/%{DOMAIN}/%{ORG}
 ln -s $HOME/rpmbuild/BUILD/cc-runtime-%{version} $HOME/rpmbuild/BUILD/go/src/%{IMPORTNAME}
 cd $HOME/rpmbuild/BUILD/go/src/%{IMPORTNAME}
-make PREFIX=/usr SYSCONFDIR=/etc \
-     LOCALSTATEDIR=/var SHAREDIR=/usr/share VERSION=@VERSION@ COMMIT=@HASH@
+make PREFIX=/usr \
+   SYSCONFDIR=/etc \
+   LOCALSTATEDIR=/var \
+   SHAREDIR=/usr/share \
+   VERSION=@VERSION@ \
+   COMMIT=@HASH@
 
 %check
 export http_proxy=http://127.0.0.1:9/
@@ -90,9 +94,18 @@ export PATH=$PATH:$HOME/rpmbuild/BUILD/local/go/bin
 export GOPATH=$HOME/rpmbuild/BUILD/go/
 
 cd $HOME/rpmbuild/BUILD/go/src/%{IMPORTNAME}
-make install DESTDIR=%{buildroot} PREFIX=/usr SYSCONFDIR=/etc LOCALSTATEDIR=/var SHAREDIR=/usr/share \
-     VERSION=@VERSION@ COMMIT=@HASH@ BASH_COMPLETIONSDIR=%{buildroot}/usr/share/bash-completion/completions/cc-runtime \
-     DESTCONFIG=%{buildroot}/etc/clear-containers/configuration.toml
+make install \
+   DESTDIR=%{buildroot} \
+   PREFIX=/usr \
+   SYSCONFDIR=/etc \
+   LOCALSTATEDIR=/var \
+   SHAREDIR=/usr/share \
+   VERSION=@VERSION@ \
+   COMMIT=@HASH@ \
+   BASH_COMPLETIONSDIR=%{buildroot}/usr/share/bash-completion/completions/cc-runtime \
+   DESTTARGET=%{buildroot}/usr/bin/cc-runtime \
+   DESTCONFIG=%{buildroot}/etc/clear-containers/configuration.toml \
+   SCRIPTS_DIR=%{buildroot}/usr/bin/cc-collect-data.sh
 
 %files
 %defattr(-,root,root,-)
@@ -100,6 +113,7 @@ make install DESTDIR=%{buildroot} PREFIX=/usr SYSCONFDIR=/etc LOCALSTATEDIR=/var
 %files bin
 %defattr(-,root,root,-)
 /usr/bin/cc-runtime
+/usr/bin/cc-collect-data.sh
 /var/lib/clear-containers
 /var/lib/clear-containers/runtime
 /var/lib/clear-containers/runtime/bundles
