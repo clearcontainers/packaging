@@ -22,9 +22,8 @@ if [[ ${VERSION::1} =~ [a-z] ]]; then
 fi
 
 OBS_PUSH=${OBS_PUSH:-false}
-STAGING=${STAGING:-true}
 OBS_RUNTIME_REPO=${OBS_RUNTIME_REPO:-home:clearcontainers:clear-containers-3-staging/cc-runtime}
-: ${OBS_APIURL:=""}
+OBS_APIURL=${OBS_APIURL:-""}
 
 # This allows to point to internal/private OBS instance
 if [ "$OBS_APIURL" != "" ]; then
@@ -54,86 +53,44 @@ changelog_update $VERSION
 RELEASE=$(($(cat release) + 1))
 echo $RELEASE > release
 
-function templating_non_staging(){
-    sed -e "s/@VERSION@/$VERSION/g" \
-        -e "s/@RELEASE@/$RELEASE/g" \
-        -e "s/@HASH@/$short_hashtag/g" \
-        -e "s/@cc_proxy_version@/$proxy_obs_fedora_version/" \
-        -e "s/@cc_shim_version@/$shim_obs_fedora_version/" \
-        -e "s/@cc_image_version@/$image_obs_fedora_version/" \
-        -e "s/@linux_container_version@/$linux_container_obs_fedora_version/" \
-        -e "s/@qemu_lite_obs_fedora_version@/$qemu_lite_obs_fedora_version/g" cc-runtime.spec-template > cc-runtime.spec
+sed -e "s/@VERSION@/$VERSION/g" \
+    -e "s/@RELEASE@/$RELEASE/g" \
+    -e "s/@HASH@/$short_hashtag/g" \
+    -e "s/@cc_proxy_version@/$proxy_obs_fedora_version/" \
+    -e "s/@cc_shim_version@/$shim_obs_fedora_version/" \
+    -e "s/@cc_image_version@/$image_obs_fedora_version/" \
+    -e "s/@linux_container_version@/$linux_container_obs_fedora_version/" \
+    -e "s/@qemu_lite_obs_fedora_version@/$qemu_lite_obs_fedora_version/g" cc-runtime.spec-template > cc-runtime.spec
 
-    sed -e "s/@VERSION@/$VERSION/" \
-        -e "s/@HASH@/$short_hashtag/" debian.rules-template > debian.rules
+sed -e "s/@VERSION@/$VERSION/" \
+    -e "s/@HASH@/$short_hashtag/" debian.rules-template > debian.rules
 
-    sed -e "s/@VERSION@/$VERSION/g"\
-        -e "s/@RELEASE@/$RELEASE/g" \
-        -e "s/@HASH@/$short_hashtag/g" \
-        -e "s/@cc_proxy_version@/$proxy_obs_ubuntu_version/" \
-        -e "s/@cc_shim_version@/$shim_obs_ubuntu_version/" \
-        -e "s/@cc_image_version@/$image_obs_ubuntu_version/" \
-        -e "s/@qemu_lite_version@/$qemu_lite_obs_ubuntu_version/" \
-        -e "s/@linux_container_version@/$linux_container_obs_ubuntu_version/" \
-        -e "s/@qemu_lite_obs_ubuntu_version@/$qemu_lite_obs_ubuntu_version/" cc-runtime.dsc-template > cc-runtime.dsc
+sed -e "s/@VERSION@/$VERSION/g"\
+    -e "s/@RELEASE@/$RELEASE/g" \
+    -e "s/@HASH@/$short_hashtag/g" \
+    -e "s/@cc_proxy_version@/$proxy_obs_ubuntu_version/" \
+    -e "s/@cc_shim_version@/$shim_obs_ubuntu_version/" \
+    -e "s/@cc_image_version@/$image_obs_ubuntu_version/" \
+    -e "s/@qemu_lite_version@/$qemu_lite_obs_ubuntu_version/" \
+    -e "s/@linux_container_version@/$linux_container_obs_ubuntu_version/" \
+    -e "s/@qemu_lite_obs_ubuntu_version@/$qemu_lite_obs_ubuntu_version/" cc-runtime.dsc-template > cc-runtime.dsc
 
-    sed -e "s/@VERSION@/$VERSION/" \
-        -e "s/@HASH_TAG@/$short_hashtag/" \
-        -e "s/@cc_proxy_version@/$proxy_obs_ubuntu_version/" \
-        -e "s/@cc_shim_version@/$shim_obs_ubuntu_version/" \
-        -e "s/@cc_image_version@/$image_obs_ubuntu_version/" \
-        -e "s/@qemu_lite_version@/$qemu_lite_obs_ubuntu_version/" \
-        -e "s/@linux_container_version@/$linux_container_obs_ubuntu_version/" \
-        -e "s/@qemu_lite_obs_ubuntu_version@/$qemu_lite_obs_ubuntu_version/"  debian.control-template > debian.control
+sed -e "s/@VERSION@/$VERSION/" \
+    -e "s/@HASH_TAG@/$short_hashtag/" \
+    -e "s/@cc_proxy_version@/$proxy_obs_ubuntu_version/" \
+    -e "s/@cc_shim_version@/$shim_obs_ubuntu_version/" \
+    -e "s/@cc_image_version@/$image_obs_ubuntu_version/" \
+    -e "s/@qemu_lite_version@/$qemu_lite_obs_ubuntu_version/" \
+    -e "s/@linux_container_version@/$linux_container_obs_ubuntu_version/" \
+    -e "s/@qemu_lite_obs_ubuntu_version@/$qemu_lite_obs_ubuntu_version/"  debian.control-template > debian.control
 
-    if [ -z "$ORIGINAL_VERSION" ]; then
-        sed "s/@VERSION@/$VERSION/g;" _service-template > _service
-    else
-        sed "s/@VERSION@/$ORIGINAL_VERSION/g;" _service-template > _service
-    fi
-
-    [ -n "$1" ] && sed -e "s/@PARENT_TAG@/$VERSION/" -i _service || :
-}
-
-function templating_staging(){
-    sed -e "s/@VERSION@/$VERSION/g" \
-        -e "s/@RELEASE@/$RELEASE/g" \
-        -e "s/@HASH@/$short_hashtag/g"  cc-runtime.spec-template > cc-runtime.spec
-
-    sed -e "s/@VERSION@/$VERSION/g" \
-        -e "s/@HASH@/$short_hashtag/" debian.rules-template > debian.rules
-
-    sed -e "s/@VERSION@/$VERSION/"\
-        -e "s/@RELEASE@/$RELEASE/" \
-        -e "s/@HASH@/$short_hashtag/"  cc-runtime.dsc-template > cc-runtime.dsc
-
-    sed -e "s/@VERSION@/$VERSION/" \
-        -e "s/@HASH_TAG@/$short_hashtag/"  debian.control-template > debian.control
-
-    if [ -z "$ORIGINAL_VERSION" ]; then
-        sed "s/@VERSION@/$VERSION/g;" _service-template > _service
-    else
-        sed "s/@VERSION@/$ORIGINAL_VERSION/g;" _service-template > _service
-    fi
-
-    [ -n "$1" ] && sed -e "s/@PARENT_TAG@/$VERSION/" -i _service || :
-
-    sed -e '/^Package: cc-runtime$/{n;n;s/^Depends: .*/Depends: \${shlibs:Depends}, \${misc:Depends}, \${perl:Depends}, cc-runtime-bin, cc-runtime-config/}' \
-        -e "/clear-containers-image*/d" \
-        -e "/cc-proxy*/d" -i cc-runtime.dsc debian.control
-
-    sed -e '/Requires: cc-proxy/d' \
-        -e '/Requires: cc-shim/d' \
-        -e '/Requires: clear-containers-*/d' \
-        -e '/Requires: linux-container*/d' -i cc-runtime.spec
-
-}
-
-if [ "$STAGING" == false ]; then
-    templating_non_staging "$@"
+if [ -z "$ORIGINAL_VERSION" ]; then
+    sed "s/@VERSION@/$VERSION/g;" _service-template > _service
 else
-    templating_staging "$@"
+    sed "s/@VERSION@/$ORIGINAL_VERSION/g;" _service-template > _service
 fi
+
+[ -n "$1" ] && sed -e "s/@PARENT_TAG@/$VERSION/" -i _service || :
 
 # Update and package OBS
 if [ "$OBS_PUSH" = true ]
