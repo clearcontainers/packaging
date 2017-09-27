@@ -1,7 +1,7 @@
 cc_proxy_hash=c66f21e21b2453f42addf96d12f6cce8f0383d9a
 cc_runtime_hash=7fc11d5fa157e9011ea286659de007f8b2022a81
 cc_shim_hash=739e5e241f8c8409c5dfc5d15a189dbbfc2d1bd1
-qemu_lite_hash=741f430a960b5b67745670e8270db91aeb083c5f
+qemu_lite_hash=d4a337fe919e4e147a721c2ff96313ce84b87c7b
 cc_proxy_version=3.0.0
 cc_runtime_version=3.0.0
 cc_shim_version=3.0.0
