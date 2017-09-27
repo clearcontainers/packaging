@@ -4,7 +4,7 @@
     <param name="url">https://github.com/clearcontainers/proxy.git</param>
     <param name="filename">cc-proxy</param>
     <param name="versionformat">@PARENT_TAG@+git.%h</param>
-    <param name="revision">@VERSION@</param>
+    <param name="revision">@REVISION@</param>
  </service>
  <service name="recompress">
     <param name="file">*.tar*</param>

@@ -10,18 +10,24 @@ AUTHOR=${AUTHOR:-$(git config user.name)}
 AUTHOR_EMAIL=${AUTHOR_EMAIL:-$(git config user.email)}
 
 source ../versions.txt
-VERSION=${1:-$cc_shim_version}
+VERSION=$cc_shim_version
 
-# If we are providing the branch or hash to build we'll take version as the hashtag
-[ -n "$1" ] && hash_tag=$VERSION || hash_tag=$cc_shim_hash
+# If we are providing the branch or hash to build, assign it to OBS_REVISION
+if [ -n "$1" ]; then
+     OBS_REVISION=$1
+
+     # Validate input is alphanumeric, commit ID
+     # If a commit ID is provided, override versions.txt one
+     if [[ "$OBS_REVISION" =~ ^[a-zA-Z0-9][-a-zA-Z0-9]{0,40}[a-zA-Z0-9]$  ]]; then
+         hash_tag=$OBS_REVISION
+     else
+         hash_tag=$cc_shim_hash
+     fi
+else
+         hash_tag=$cc_shim_hash
+fi
 short_hashtag="${hash_tag:0:7}"
 
-# When building from hash, the first character of the hash is replaced by a "1".
-# This is because spec files rejects versions starting with letters. 
-if [[ ${VERSION::1} =~ [a-z] ]]; then
-    ORIGINAL_VERSION=$VERSION
-    VERSION=1${VERSION:1}
-fi
 
 OBS_PUSH=${OBS_PUSH:-false}
 OBS_SHIM_REPO=${OBS_SHIM_REPO:-home:clearcontainers:clear-containers-3-staging/cc-shim}
@@ -68,13 +74,15 @@ sed -e "s/@VERSION@/$VERSION/g" \
 sed -e "s/@VERSION@/$VERSION/g" \
     -e "s/@HASH@/$short_hashtag/g" debian.control-template > debian.control
 
-if [ -z "$ORIGINAL_VERSION" ]; then
-    sed "s/@VERSION@/$VERSION/g;" _service-template > _service
+# If OBS_REVISION is not empty, which means a branch or commit ID has been passed as argument,
+# replace It as @REVISION@ it in the OBS _service file. Otherwise, use the VERSION variable,
+# which uses the version from versions.txt.
+# This will determine which source tarball will be retrieved from github.com
+if [ -n "$OBS_REVISION" ]; then
+    sed "s/@REVISION@/$OBS_REVISION/" _service-template > _service
 else
-    sed "s/@VERSION@/$ORIGINAL_VERSION/g;" _service-template > _service
+    sed "s/@REVISION@/$VERSION/"  _service-template > _service
 fi
-
-[ -n "$1" ] && sed -e "s/@PARENT_TAG@/$VERSION/" -i _service || :
 
 # Update and package OBS
 if [ "$OBS_PUSH" = true ]
