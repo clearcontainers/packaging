@@ -27,12 +27,15 @@ override_dh_auto_install:
 	mkdir -p debian/cc-runtime
 	cd $(GOPATH)/src/github.com/clearcontainers/runtime/; \
 	make install \
-		DESTDIR=%{buildroot} \
-		PREFIX=/usr SYSCONFDIR=/etc \
-		LOCALSTATEDIR=/var SHAREDIR=/usr/share \
+		DESTDIR=$(shell pwd)/debian/cc-runtime \
+		PREFIX=/usr \
+		SYSCONFDIR=/etc \
+		LOCALSTATEDIR=/var\
+		SHAREDIR=/usr/share \
 		VERSION=@VERSION@ \
 		COMMIT=@HASH@ \
-		BASH_COMPLETIONSDIR=%{buildroot}/usr/share/bash-completion/completions/cc-runtime \
-		DESTTARGET=%{buildroot}/usr/bin/cc-runtime \
-		DESTCONFIG=%{buildroot}/etc/clear-containers/configuration.toml \
-		SCRIPTS_DIR=%{buildroot}/usr/bin/cc-collect-data.sh
+		BASH_COMPLETIONSDIR=$(shell pwd)/debian/cc-runtime/usr/share/bash-completion/completions/cc-runtime \
+		DESTTARGET=$(shell pwd)/debian/cc-runtime/usr/bin/cc-runtime \
+		DESTCONFIG=$(shell pwd)/debian/cc-runtime/etc/clear-containers/configuration.toml \
+		SCRIPTS_DIR=$(shell pwd)/debian/cc-runtime/usr/bin/cc-collect-data.sh
+
