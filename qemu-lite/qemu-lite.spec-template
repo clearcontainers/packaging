@@ -31,7 +31,6 @@ BuildRequires : python-devel
 BuildRequires : zlib-devel
 BuildRequires : pkgconfig(pixman-1)
 Patch1: configure.patch
-Patch7: version.patch
 
 %description
 ===========
@@ -58,7 +57,6 @@ data components for the qemu-lite package.
 %prep
 %setup -q
 %patch1 -p1
-%patch7 -p1
 
 %build
 export LANG=C
