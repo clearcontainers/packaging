@@ -2,7 +2,6 @@
 0103-sysrq-skip-synchronize_rcu-if-there-is-no-old-op.patch
 0104-fbcon-enable-no-blink-by-default.patch
 0105-vmstats-wakeups.patch
-0106-pci-probe.patch
 0107-cgroup.patch
 0108-smpboot-reuse-timer-calibration.patch
 0109-perf.patch
@@ -17,6 +16,5 @@
 0204-rdrand.patch
 0205-reboot.patch
 0206-no-early-modprobe.patch
-0207-pci-guest-kernel-set-pci-net-class-bar-to-4.patch
 0208-Show-restart-information-using-info-log.patch
 0002-UBUNTU-SAUCE-no-up-disable-pie-when-gcc-has-it-enabl.patch

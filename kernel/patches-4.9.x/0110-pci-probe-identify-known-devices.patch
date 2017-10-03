@@ -1,7 +1,7 @@
-From 3815fc20e3b97a003fd1ae6c5d5116ed5400baaf Mon Sep 17 00:00:00 2001
-From: Arjan van de Ven <arjan@linux.intel.com>
-Date: Sat, 14 Feb 2015 09:49:41 -0600
-Subject: [PATCH 110/114] pci: probe: identify known devices
+From 3ef83534a6216dc2c3b19fb1e74ee0db9fa4257e Mon Sep 17 00:00:00 2001
+From: Julio Montes <julio.montes@intel.com>
+Date: Fri, 29 Sep 2017 08:11:13 -0500
+Subject: [PATCH] pci: probe: identify known devices
 
 Author:    Arjan van de Ven <arjan@linux.intel.com>
 Modify-by: Miguel Bernal Marin <miguel.bernal.marin@linux.intel.com>
@@ -12,7 +12,7 @@ Signed-off-by: Miguel Bernal Marin <miguel.bernal.marin@linux.intel.com>
  1 file changed, 156 insertions(+)
 
 diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index e3377cd5a632..cbe81b100d51 100644
+index d266d80..c182443 100644
 --- a/drivers/pci/probe.c
 +++ b/drivers/pci/probe.c
 @@ -163,6 +163,159 @@ static inline unsigned long decode_bar(struct pci_dev *dev, u32 bar)
@@ -175,16 +175,16 @@ index e3377cd5a632..cbe81b100d51 100644
  /**
   * pci_read_base - read a PCI BAR
   * @dev: the PCI device
-@@ -182,6 +335,9 @@ int __pci_read_base(struct pci_dev *dev, enum pci_bar_type type,
- 
- 	mask = type ? PCI_ROM_ADDRESS_MASK : ~0;
+@@ -191,6 +344,9 @@ int __pci_read_base(struct pci_dev *dev, enum pci_bar_type type,
+ 		}
+ 	}
  
 +	if (is_known_device(dev, pos, &sz))
 +		return __pci_read_base_shortcut(dev, type, res, pos, sz, 0);
 +
  	res->name = pci_name(dev);
  
- 	printk("clr: Starting probe for %s\n", res->name);
+ 	pci_read_config_dword(dev, pos, &l);
 -- 
-2.11.0
+2.7.5
 
