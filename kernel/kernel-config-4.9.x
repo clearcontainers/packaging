@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 4.9.4 Kernel Configuration
+# Linux/x86 4.9.47 Kernel Configuration
 #
 CONFIG_64BIT=y
 CONFIG_X86_64=y
@@ -581,8 +581,15 @@ CONFIG_PCI_MMCONFIG=y
 CONFIG_PCI_DOMAINS=y
 # CONFIG_PCI_CNB20LE_QUIRK is not set
 CONFIG_PCIEPORTBUS=y
-# CONFIG_PCIEAER is not set
-# CONFIG_PCIEASPM is not set
+CONFIG_HOTPLUG_PCI_PCIE=y
+CONFIG_PCIEAER=y
+# CONFIG_PCIE_ECRC is not set
+# CONFIG_PCIEAER_INJECT is not set
+CONFIG_PCIEASPM=y
+# CONFIG_PCIEASPM_DEBUG is not set
+CONFIG_PCIEASPM_DEFAULT=y
+# CONFIG_PCIEASPM_POWERSAVE is not set
+# CONFIG_PCIEASPM_PERFORMANCE is not set
 # CONFIG_PCIE_DPC is not set
 # CONFIG_PCIE_PTM is not set
 CONFIG_PCI_BUS_ADDR_T_64BIT=y
@@ -596,7 +603,10 @@ CONFIG_PCI_MSI_IRQ_DOMAIN=y
 # CONFIG_PCI_PRI is not set
 # CONFIG_PCI_PASID is not set
 CONFIG_PCI_LABEL=y
-# CONFIG_HOTPLUG_PCI is not set
+CONFIG_HOTPLUG_PCI=y
+# CONFIG_HOTPLUG_PCI_ACPI is not set
+# CONFIG_HOTPLUG_PCI_CPCI is not set
+# CONFIG_HOTPLUG_PCI_SHPC is not set
 
 #
 # PCI host controller drivers
@@ -1326,7 +1336,7 @@ CONFIG_NET_VENDOR_INTEL=y
 # CONFIG_IGBVF is not set
 # CONFIG_IXGB is not set
 CONFIG_IXGBE=y
-CONFIG_IXGBEVF=y
+# CONFIG_IXGBEVF is not set
 # CONFIG_I40E is not set
 # CONFIG_I40EVF is not set
 # CONFIG_FM10K is not set
@@ -1822,7 +1832,7 @@ CONFIG_ARM_GIC_MAX_NR=1
 #
 # Performance monitor support
 #
-# CONFIG_RAS is not set
+CONFIG_RAS=y
 # CONFIG_THUNDERBOLT is not set
 
 #

@@ -39,7 +39,6 @@ Patch0102: 0102-cpuidle-skip-synchronize_rcu-on-single-CPU-systems.patch
 Patch0103: 0103-sysrq-skip-synchronize_rcu-if-there-is-no-old-op.patch
 Patch0104: 0104-fbcon-enable-no-blink-by-default.patch
 Patch0105: 0105-vmstats-wakeups.patch
-Patch0106: 0106-pci-probe.patch
 Patch0107: 0107-cgroup.patch
 Patch0108: 0108-smpboot-reuse-timer-calibration.patch
 Patch0109: 0109-perf.patch
@@ -56,7 +55,6 @@ Patch0203: 0203-fs-9p-fix-create-unlink-getattr-idiom.patch
 Patch0204: 0204-rdrand.patch
 Patch0205: 0205-reboot.patch
 Patch0206: 0206-no-early-modprobe.patch
-Patch0207: 0207-pci-guest-kernel-set-pci-net-class-bar-to-4.patch
 Patch0208: 0208-Show-restart-information-using-info-log.patch
 
 # Serie    XYYY: Extra features modules
@@ -73,7 +71,6 @@ The Linux kernel.
 %patch0103 -p1
 %patch0104 -p1
 %patch0105 -p1
-%patch0106 -p1
 %patch0107 -p1
 %patch0108 -p1
 %patch0109 -p1
@@ -90,7 +87,6 @@ The Linux kernel.
 %patch0204 -p1
 %patch0205 -p1
 %patch0206 -p1
-%patch0207 -p1
 %patch0208 -p1
 
 # Serie    XYYY: Extra features modules
