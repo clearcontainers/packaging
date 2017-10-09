@@ -56,6 +56,7 @@ Patch0204: 0204-rdrand.patch
 Patch0205: 0205-reboot.patch
 Patch0206: 0206-no-early-modprobe.patch
 Patch0208: 0208-Show-restart-information-using-info-log.patch
+Patch0209: 0209-HACK-9P-always-use-cached-inode-to-fill-in-v9fs_vfs_.patch
 
 # Serie    XYYY: Extra features modules
 
@@ -88,6 +89,7 @@ The Linux kernel.
 %patch0205 -p1
 %patch0206 -p1
 %patch0208 -p1
+%patch0209 -p1
 
 # Serie    XYYY: Extra features modules
 

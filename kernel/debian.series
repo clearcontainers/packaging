@@ -17,4 +17,5 @@
 0205-reboot.patch
 0206-no-early-modprobe.patch
 0208-Show-restart-information-using-info-log.patch
+0209-HACK-9P-always-use-cached-inode-to-fill-in-v9fs_vfs_.patch
 0002-UBUNTU-SAUCE-no-up-disable-pie-when-gcc-has-it-enabl.patch
