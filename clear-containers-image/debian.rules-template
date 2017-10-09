@@ -1,0 +1,10 @@
+#!/usr/bin/make -f
+version=@VERSION@
+%:
+	dh $@
+
+override_dh_install:
+	tar -C $(CURDIR) -xvJf ../SOURCES/clear-$(version)-containers.tar.xz
+	echo "Installing clear-containers-image"
+	install containers.img $(CURDIR)/debian/clear-containers-image/usr/share/clear-containers/clear-$(version)-containers.img
+	ln -sf /usr/share/clear-containers/clear-$(version)-containers.img $(CURDIR)/debian/clear-containers-image/usr/share/clear-containers/clear-containers.img
