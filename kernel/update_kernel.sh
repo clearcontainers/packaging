@@ -40,7 +40,7 @@ echo ${next_release} > release
 
 if [ "${VERSION}" = "latest" ]
 then
-    VERSION=$(curl -L -s -f ${KR_REL} | grep "${KR_LTS}" | grep version | cut -f 4 -d \")
+    VERSION=$(curl -L -s -f ${KR_REL} | grep "${KR_LTS}" | grep version | cut -f 4 -d \" | grep "^${KR_LTS}")
 fi
 
 kernel_sha256=$(curl -L -s -f ${KR_SHA} | awk '/linux-'${VERSION}'.tar.xz/ {print $1}')
