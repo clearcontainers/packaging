@@ -103,6 +103,9 @@ then
         debian.compat \
         *.patch \
         $TMPDIR
+
+    cp ../scripts/apport_hook.py $TMPDIR/source_cc-shim.py
+    
     [ -f debian.series ] && cp debian.series $TMPDIR || :
     cd $TMPDIR
     osc $APIURL addremove
