@@ -25,6 +25,10 @@ override_dh_auto_build:
 
 override_dh_auto_install:
 	mkdir -p debian/cc-runtime
+
+	install -D /usr/src/packages/SOURCES/source_cc-runtime.py \
+	debian/cc-runtime/usr/share/apport/package-hooks/source_cc-runtime.py
+
 	cd $(GOPATH)/src/github.com/clearcontainers/runtime/; \
 	make install \
 		DESTDIR=$(shell pwd)/debian/cc-runtime \

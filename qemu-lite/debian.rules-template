@@ -67,6 +67,9 @@ override_dh_auto_install:
 		mv $$file "$$dir"/"$$new" ; \
 	done
 
+	install -D /usr/src/packages/SOURCES/source_qemu-lite.py \
+	debian/qemu-lite/usr/share/apport/package-hooks/source_qemu-lite.py
+
 override_dh_auto_test:
 	echo "Skip dh_auto_test"
 

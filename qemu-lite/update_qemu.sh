@@ -64,6 +64,9 @@ then
         _service \
         *.patch \
         $TMPDIR
+
+    cp ../scripts/apport_hook.py $TMPDIR/source_qemu-lite.py
+
     [ -f debian.series ] && cp debian.series $TMPDIR || :
     cd $TMPDIR
     osc addremove

@@ -122,6 +122,9 @@ then
         cc-runtime-config.install \
         *.patch \
         $TMPDIR
+
+    cp ../scripts/apport_hook.py $TMPDIR/source_cc-runtime.py
+
     [ -f debian.series ] && cp debian.series $TMPDIR || :
     cd $TMPDIR
 
