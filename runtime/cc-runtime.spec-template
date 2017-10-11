@@ -104,8 +104,7 @@ make install \
    COMMIT=@HASH@ \
    BASH_COMPLETIONSDIR=%{buildroot}/usr/share/bash-completion/completions/cc-runtime \
    DESTTARGET=%{buildroot}/usr/bin/cc-runtime \
-   DESTCONFIG=%{buildroot}/etc/clear-containers/configuration.toml \
-   SCRIPTS_DIR=%{buildroot}/usr/bin/cc-collect-data.sh
+   DESTCONFIG=%{buildroot}/etc/clear-containers/configuration.toml 
 
 %files
 %defattr(-,root,root,-)

@@ -1,3 +1,9 @@
+clear-containers-image (18220-35) stable; urgency=medium
+
+  * Update clear-containers-image 18220.
+
+ -- Erick Cardona <erick.cardona.ruiz@intel.com>  Wed, 11 Oct 2017 17:28:03 +0000
+
 clear-containers-image (17270-25) stable; urgency=medium
 
   * Update clear-containers-image 17270.
