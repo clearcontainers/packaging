@@ -17,4 +17,6 @@ override_dh_auto_build:
 
 override_dh_auto_install:
 	mkdir debian/cc-proxy
+	install -D /usr/src/packages/SOURCES/source_cc-proxy.py \
+	debian/cc-proxy/usr/share/apport/package-hooks/source_cc-proxy.py
 	make install DESTDIR=`pwd`/debian/cc-proxy UNIT_DIR=/usr/lib/systemd/system VERSION=@VERSION_STRING@
