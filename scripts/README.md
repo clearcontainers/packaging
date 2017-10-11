@@ -15,3 +15,10 @@ Example usage:
 ```
   $ configure-hypervisor.sh qemu-lite
 ```
+
+## `apport_hook.py`
+
+This script is a basic hook which will call the cc-collect-data.sh script
+when any of the components crashes (runtime, proxy, shim, qemu-lite).
+The script output will then be added to the standard Ubuntu bug report
+that will get created on launchpad.net.
