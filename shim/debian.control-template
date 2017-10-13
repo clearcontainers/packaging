@@ -1,7 +1,7 @@
 Source: cc-shim
 Section: devel
 Priority: optional
-Maintainer: clearlinux.org team <dev@lists.clearlinux.org>
+Maintainer: clear containers team <cc-devel@lists.01.org>
 Standards-Version: 3.9.6
 Homepage: https://clearlinux.org/features/clear-containers
 Build-Depends: debhelper (>= 9), git, ca-certificates, dh-modaliases, execstack, devscripts, dh-make

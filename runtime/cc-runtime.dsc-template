@@ -3,7 +3,7 @@ Source: cc-runtime
 Version: @VERSION@+git.@HASH@-@RELEASE@
 Section: devel
 Priority: optional
-Maintainer: clearlinux.org team <dev@lists.clearlinux.org>
+Maintainer: clear containers team <cc-devel@lists.01.org>
 Standards-Version: 3.9.6
 Build-Depends: dh-make, git, ca-certificates, execstack, devscripts, debhelper, build-essential, dh-autoreconf, make, dh-modaliases
 Homepage: https://clearlinux.org/features/clear-containers
