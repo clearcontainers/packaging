@@ -6,37 +6,55 @@
 # Default image to build is the one specified in file versions.txt
 # located at the root of the repository.
 set -x
+if [ $# -ne 1 ]; then
+    cat << EOT
+Usage:
+$0 <clear-linux-version>
+
+You need to provide the version to update the image
+EOT
+    exit
+fi
+script_dir=$(dirname "$0")
+git checkout ${script_dir}/release ${script_dir}/debian.changelog ${script_dir}/../versions.txt
+source ${script_dir}/../versions.txt
+
+VERSION=${1}
+
 AUTHOR=${AUTHOR:-$(git config user.name)}
 AUTHOR_EMAIL=${AUTHOR_EMAIL:-$(git config user.email)}
 
-CC_VERSIONS_FILE="../versions.txt"
-source "$CC_VERSIONS_FILE"
-VERSION=${1:-$clear_vm_image_version}
 
 OBS_PUSH=${OBS_PUSH:-false}
 OBS_CC_IMAGE_REPO=${OBS_CC_IMAGE_REPO:-home:clearcontainers:clear-containers-3-staging/clear-containers-image}
 
-git checkout debian.changelog
-last_release=$(cat release)
+last_release=$(cat ${script_dir}/release)
 next_release=$(( $last_release + 1 ))
 
 echo "Running: $0 $@"
 echo "Update clear-containers-image to: $VERSION-$next_release"
+image_changes=$(${script_dir}/../scripts/get-image-changes.sh $VERSION)
+
+sed -i s/"clear_vm_image_version=${clear_vm_image_version}"/"clear_vm_image_version=${VERSION}"/ "${CC_VERSIONS_FILE}" 
 
 function changelog_update {
     d=$(date +"%a, %d %b %Y %H:%M:%S %z")
-    cp debian.changelog debian.changelog-bk
+    cp ${script_dir}/debian.changelog ${script_dir}/debian.changelog-bk
     cat <<< "clear-containers-image ($VERSION-$next_release) stable; urgency=medium
 
-  * Update clear-containers-image $VERSION.
+  * Update clear-containers-image from $clear_vm_image_version to $VERSION.
+" > ${script_dir}/debian.changelog
+
+    echo "${image_changes}
 
  -- $AUTHOR <$AUTHOR_EMAIL>  $d
-" > debian.changelog
-    cat debian.changelog-bk >> debian.changelog
-    rm debian.changelog-bk
+" >> ${script_dir}/debian.changelog
+    cat ${script_dir}/debian.changelog-bk >> ${script_dir}/debian.changelog
+    rm ${script_dir}/debian.changelog-bk
 }
 
 changelog_update $VERSION
+echo $next_release > ${script_dir}/release
 
 sed "s/\@VERSION\@/$VERSION/g; s/\@RELEASE\@/$next_release/g" clear-containers-image.spec-template > clear-containers-image.spec
 sed "s/\@VERSION\@/$VERSION/g; s/\@RELEASE\@/$next_release/g" clear-containers-image.dsc-template > clear-containers-image.dsc
@@ -55,15 +73,15 @@ then
     rm -rf *.img.xz \
         *tar.xz \
         *orig.tar.xz
-    mv $cc_image_dir/clear-containers-image.spec .
-    mv $cc_image_dir/clear-containers-image.dsc .
-    mv $cc_image_dir/_service .
-    mv $cc_image_dir/debian.rules .
-    cp $cc_image_dir/LICENSE .
-    cp $cc_image_dir/debian.control .
-    cp $cc_image_dir/debian.compat .
-    cp $cc_image_dir/debian.changelog .
-    cp $cc_image_dir/debian.dirs .
+    mv ${cc_image_dir}/clear-containers-image.spec .
+    mv ${cc_image_dir}/clear-containers-image.dsc .
+    mv ${cc_image_dir}/_service .
+    mv ${cc_image_dir}/debian.rules .
+    cp ${cc_image_dir}/LICENSE .
+    cp ${cc_image_dir}/debian.control .
+    cp ${cc_image_dir}/debian.compat .
+    cp ${cc_image_dir}/debian.changelog .
+    cp ${cc_image_dir}/debian.dirs .
     osc addremove
     osc commit -m "Update clear-containers-image to: $VERSION-$next_release"
 fi
