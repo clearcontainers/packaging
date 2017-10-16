@@ -35,7 +35,7 @@ echo "Running: $0 $@"
 echo "Update clear-containers-image to: $VERSION-$next_release"
 image_changes=$(${script_dir}/../scripts/get-image-changes.sh $VERSION)
 
-sed -i s/"clear_vm_image_version=${clear_vm_image_version}"/"clear_vm_image_version=${VERSION}"/ "${CC_VERSIONS_FILE}" 
+sed -i s/"clear_vm_image_version=${clear_vm_image_version}"/"clear_vm_image_version=${VERSION}"/ ${script_dir}/../versions.txt
 
 function changelog_update {
     d=$(date +"%a, %d %b %Y %H:%M:%S %z")
