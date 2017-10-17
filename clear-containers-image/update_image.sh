@@ -33,7 +33,7 @@ next_release=$(( $last_release + 1 ))
 
 echo "Running: $0 $@"
 echo "Update clear-containers-image to: $VERSION-$next_release"
-image_changes=$(${script_dir}/../scripts/get-image-changes.sh $VERSION)
+image_changes=$(${script_dir}/../scripts/get-image-changes.sh $VERSION | awk '{if (/^version/) print "  * "$0; else print "  "$0"\n"}')
 
 sed -i s/"clear_vm_image_version=${clear_vm_image_version}"/"clear_vm_image_version=${VERSION}"/ ${script_dir}/../versions.txt
 
