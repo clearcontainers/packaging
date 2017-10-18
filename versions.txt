@@ -6,7 +6,7 @@ cc_proxy_version=3.0.3
 cc_runtime_version=3.0.3
 cc_shim_version=3.0.3
 clear_vm_kernel_version=4.9.54-78
-clear_vm_image_version=18220
+clear_vm_image_version=18400
 qemu_lite_version=2.7.1
 
 # OBS package versions

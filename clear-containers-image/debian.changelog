@@ -1,3 +1,25 @@
+clear-containers-image (18400-36) stable; urgency=medium
+
+  * Update clear-containers-image from 18220 to 18400.
+
+  * version: 18280
+  Changes in package iptables (from 1.6.1-20 to 1.6.1-21):
+
+       George T Kramer - iptables: Autospec creation for version 1.6.1
+
+  https://download.clearlinux.org/releases/18280/clear/RELEASENOTES
+
+  * version: 18400
+  Changes in package clear-containers-agent (from 84761a194a72018c67f1fa8a6a1267b8ea120f82-12 to 2c127987830773e8d7cf6c8c5571b8ebd5e28171-13):
+
+       Jose Carlos Venegas Munoz - version bump from 2c127987830773e8d7cf6c8c5571b8ebd5e28171-12 to 2c127987830773e8d7cf6c8c5571b8ebd5e28171-13
+
+       Jose Carlos Venegas Munoz - new agent version 2c12798
+
+  https://download.clearlinux.org/releases/18400/clear/RELEASENOTES
+
+ -- Erick Cardona <erick.cardona.ruiz@intel.com>  Tue, 17 Oct 2017 12:31:17 -0500
+
 clear-containers-image (18220-35) stable; urgency=medium
 
   * Update clear-containers-image 18220.
