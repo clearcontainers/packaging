@@ -121,6 +121,7 @@ then
         cc-runtime-bin.install \
         cc-runtime-config.install \
         *.patch \
+        debian.postinst \
         $TMPDIR
 
     cp ../scripts/apport_hook.py $TMPDIR/source_cc-runtime.py
