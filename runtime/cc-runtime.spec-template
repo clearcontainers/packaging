@@ -77,7 +77,7 @@ mkdir -p $HOME/rpmbuild/BUILD/go/src/%{DOMAIN}/%{ORG}
 ln -s $HOME/rpmbuild/BUILD/cc-runtime-%{version} $HOME/rpmbuild/BUILD/go/src/%{IMPORTNAME}
 cd $HOME/rpmbuild/BUILD/go/src/%{IMPORTNAME}
 make PREFIX=/usr \
-   SYSCONFDIR=/etc \
+   SYSCONFDIR=/usr/share/defaults \
    LOCALSTATEDIR=/var \
    SHAREDIR=/usr/share \
    VERSION=@VERSION@ \
@@ -104,7 +104,10 @@ make install \
    COMMIT=@HASH@ \
    BASH_COMPLETIONSDIR=%{buildroot}/usr/share/bash-completion/completions/cc-runtime \
    DESTTARGET=%{buildroot}/usr/bin/cc-runtime \
-   DESTCONFIG=%{buildroot}/etc/clear-containers/configuration.toml 
+   DESTCONFIG=%{buildroot}/usr/share/defaults/clear-containers/configuration.toml
+
+%post
+[ -e /etc/clear-containers/configuration.toml ] && rm /etc/clear-containers/configuration.toml || :
 
 %files
 %defattr(-,root,root,-)
@@ -125,5 +128,6 @@ make install \
 
 %files config
 %defattr(-,root,root,-)
-/etc/clear-containers
-/etc/clear-containers/configuration.toml
+/usr/share/defaults/
+/usr/share/defaults/clear-containers/
+/usr/share/defaults/clear-containers/configuration.toml

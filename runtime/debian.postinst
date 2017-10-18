@@ -1,0 +1,3 @@
+#!/bin/bash
+
+[ -e /etc/clear-containers/configuration.toml ] && rm /etc/clear-containers/configuration.toml || :
