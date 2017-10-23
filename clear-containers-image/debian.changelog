@@ -1,3 +1,18 @@
+clear-containers-image (18520-37) stable; urgency=medium
+
+  * Update clear-containers-image from 18400 to 18520.
+
+  * version: 18520
+  Changes in package clear-containers-agent (from 2c127987830773e8d7cf6c8c5571b8ebd5e28171-13 to 1fa147836736824c32a46889d6fb59402d4e58bd-14):
+
+       Jose Carlos Venegas Munoz - version bump from 1fa147836736824c32a46889d6fb59402d4e58bd-13 to 1fa147836736824c32a46889d6fb59402d4e58bd-14
+
+       Jose Carlos Venegas Munoz - New agent version 1fa1478
+
+  https://download.clearlinux.org/releases/18520/clear/RELEASENOTES
+
+ -- Erick Cardona <erick.cardona.ruiz@intel.com>  Mon, 23 Oct 2017 13:36:44 +0000
+
 clear-containers-image (18400-36) stable; urgency=medium
 
   * Update clear-containers-image from 18220 to 18400.

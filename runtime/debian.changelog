@@ -1,3 +1,9 @@
+cc-runtime (3.0.5) stable; urgency=medium
+
+  * Update cc-runtime 3.0.5 40047b5
+
+ -- Erick Cardona <erick.cardona.ruiz@intel.com>  Mon, 23 Oct 2017 16:09:30 +0000
+
 cc-runtime (3.0.4) stable; urgency=medium
 
   * Update cc-runtime 3.0.4 28bd75d
