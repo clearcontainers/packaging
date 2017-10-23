@@ -1,3 +1,9 @@
+qemu-lite (2.7.1-10) stable; urgency=medium
+
+  * Update qemu-lite 2.7.1+d4a337fe91-10
+
+ -- Erick Cardona <erick.cardona.ruiz@intel.com>  Mon, 23 Oct 2017 13:53:13 +0000
+
 qemu-lite (2.7.1-9) stable; urgency=medium
 
   * Update qemu-lite 2.7.1+d4a337fe91-9
