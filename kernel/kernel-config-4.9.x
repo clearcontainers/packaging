@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 4.9.54 Kernel Configuration
+# Linux/x86 4.9.58-79.container Kernel Configuration
 #
 CONFIG_64BIT=y
 CONFIG_X86_64=y
@@ -2268,7 +2268,7 @@ CONFIG_CRYPTO_SEQIV=y
 CONFIG_CRYPTO_CBC=y
 CONFIG_CRYPTO_CTR=y
 # CONFIG_CRYPTO_CTS is not set
-# CONFIG_CRYPTO_ECB is not set
+CONFIG_CRYPTO_ECB=y
 CONFIG_CRYPTO_LRW=y
 # CONFIG_CRYPTO_PCBC is not set
 CONFIG_CRYPTO_XTS=y
