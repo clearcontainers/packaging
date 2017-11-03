@@ -116,12 +116,6 @@ make install \
 %defattr(-,root,root,-)
 /usr/bin/cc-runtime
 /usr/bin/cc-collect-data.sh
-/var/lib/clear-containers
-/var/lib/clear-containers/runtime
-/var/lib/clear-containers/runtime/bundles
-/var/lib/clear-containers/runtime/bundles/pause_bundle
-/var/lib/clear-containers/runtime/bundles/pause_bundle/bin
-/var/lib/clear-containers/runtime/bundles/pause_bundle/bin/pause
 /usr/share/bash-completion
 /usr/share/bash-completion/completions
 /usr/share/bash-completion/completions/cc-runtime
