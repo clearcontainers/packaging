@@ -5,7 +5,7 @@ qemu_lite_hash=d4a337fe919e4e147a721c2ff96313ce84b87c7b
 cc_proxy_version=3.0.6
 cc_runtime_version=3.0.6
 cc_shim_version=3.0.6
-clear_vm_kernel_version=4.9.58
+clear_vm_kernel_version=4.9.60
 clear_vm_image_version=18770
 qemu_lite_version=2.7.1
 
