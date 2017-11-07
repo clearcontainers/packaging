@@ -5,133 +5,102 @@
 # Automation script to create specs to build cc-runtime
 # Default: Build is the one specified in file configure.ac
 # located at the root of the repository.
-set -x
-AUTHOR=${AUTHOR:-$(git config user.name)}
-AUTHOR_EMAIL=${AUTHOR_EMAIL:-$(git config user.email)}
+set -e
 
 source ../versions.txt
+source ../scripts/pkglib.sh
+
+SCRIPT_NAME=$0
+SCRIPT_DIR=$(dirname $0)
+PKG_NAME="cc-runtime"
 VERSION=$cc_runtime_version
+RELEASE=$(cat release)
+APPORT_HOOK="source_cc-runtime.py"
 
-# If we are providing the branch or hash to build, assign it to OBS_REVISION
-if [ -n "$1" ]; then
-     OBS_REVISION=$1
+BUILD_DISTROS=(Fedora_26 xUbuntu_16.04)
 
-     # Validate input is alphanumeric, commit ID
-     # If a commit ID is provided, override versions.txt one
-     if [[ "$OBS_REVISION" =~ ^[a-zA-Z0-9][-a-zA-Z0-9]{0,40}[a-zA-Z0-9]$  ]]; then
-         hash_tag=$OBS_REVISION
-     else
-         hash_tag=$cc_runtime_hash
-     fi
-else
-         hash_tag=$cc_runtime_hash
-fi
-short_hashtag="${hash_tag:0:7}"
+GENERATED_FILES=(cc-runtime.spec cc-runtime.dsc debian.control debian.rules _service)
+STATIC_FILES=(debian.compat cc-runtime-bin.install cc-runtime-config.install debian.postinst)
 
-OBS_PUSH=${OBS_PUSH:-false}
-OBS_RUNTIME_REPO=${OBS_RUNTIME_REPO:-home:clearcontainers:clear-containers-3-staging/cc-runtime}
-OBS_APIURL=${OBS_APIURL:-""}
+COMMIT=false
+BRANCH=false
+LOCAL_BUILD=false
+OBS_PUSH=false
+VERBOSE=false
 
-# This allows to point to internal/private OBS instance
-if [ "$OBS_APIURL" != "" ]; then
-    APIURL="-A ${OBS_APIURL}"
-else
-    APIURL=""
-fi
+# Parse arguments
+cli "$@"
 
-echo "Running: $0 $@"
-echo "Update cc-runtime $VERSION: ${hash_tag:0:7}"
+[ "$VERBOSE" == "true" ] && set -x || true
+PROJECT_REPO=${PROJECT_REPO:-home:clearcontainers:clear-containers-3-staging/cc-runtime}
+[ -n "$APIURL" ] && APIURL="-A ${APIURL}" || true
 
-function changelog_update {
-    d=$(date +"%a, %d %b %Y %H:%M:%S %z")
-    git checkout debian.changelog
-    cp debian.changelog debian.changelog-bk
-    cat <<< "cc-runtime ($VERSION) stable; urgency=medium
+# Generate specs using templates
+function template()
+{
+    sed -e "s/@VERSION@/$VERSION/g" \
+	    -e "s/@RELEASE@/$RELEASE/g" \
+	    -e "s/@HASH@/$short_hashtag/g" \
+	    -e "s/@cc_proxy_version@/$proxy_obs_fedora_version/" \
+	    -e "s/@cc_shim_version@/$shim_obs_fedora_version/" \
+	    -e "s/@cc_image_version@/$image_obs_fedora_version/" \
+	    -e "s/@linux_container_version@/$linux_container_obs_fedora_version/" \
+	    -e "s/@qemu_lite_obs_fedora_version@/$qemu_lite_obs_fedora_version/g" \
+	    cc-runtime.spec-template > cc-runtime.spec
 
-  * Update cc-runtime $VERSION ${hash_tag:0:7}
+    sed -e "s/@VERSION@/$VERSION/" \
+	    -e "s/@HASH@/$short_hashtag/" debian.rules-template > debian.rules
 
- -- $AUTHOR <$AUTHOR_EMAIL>  $d
-" > debian.changelog
-    cat debian.changelog-bk >> debian.changelog
-    rm debian.changelog-bk
-}
-changelog_update $VERSION
+    sed -e "s/@VERSION@/$VERSION/g"\
+	    -e "s/@RELEASE@/$RELEASE/g" \
+	    -e "s/@HASH@/$short_hashtag/g" \
+	    -e "s/@cc_proxy_version@/$proxy_obs_ubuntu_version/" \
+	    -e "s/@cc_shim_version@/$shim_obs_ubuntu_version/" \
+	    -e "s/@cc_image_version@/$image_obs_ubuntu_version/" \
+	    -e "s/@qemu_lite_version@/$qemu_lite_obs_ubuntu_version/" \
+	    -e "s/@linux_container_version@/$linux_container_obs_ubuntu_version/" \
+	    -e "s/@qemu_lite_obs_ubuntu_version@/$qemu_lite_obs_ubuntu_version/" \
+	    cc-runtime.dsc-template > cc-runtime.dsc
 
-RELEASE=$(($(cat release) + 1))
-echo $RELEASE > release
+    sed -e "s/@VERSION@/$VERSION/" \
+	    -e "s/@HASH_TAG@/$short_hashtag/" \
+	    -e "s/@cc_proxy_version@/$proxy_obs_ubuntu_version/" \
+	    -e "s/@cc_shim_version@/$shim_obs_ubuntu_version/" \
+	    -e "s/@cc_image_version@/$image_obs_ubuntu_version/" \
+	    -e "s/@qemu_lite_version@/$qemu_lite_obs_ubuntu_version/" \
+	    -e "s/@linux_container_version@/$linux_container_obs_ubuntu_version/" \
+	    -e "s/@qemu_lite_obs_ubuntu_version@/$qemu_lite_obs_ubuntu_version/"  \
+	    debian.control-template > debian.control
 
-sed -e "s/@VERSION@/$VERSION/g" \
-    -e "s/@RELEASE@/$RELEASE/g" \
-    -e "s/@HASH@/$short_hashtag/g" \
-    -e "s/@cc_proxy_version@/$proxy_obs_fedora_version/" \
-    -e "s/@cc_shim_version@/$shim_obs_fedora_version/" \
-    -e "s/@cc_image_version@/$image_obs_fedora_version/" \
-    -e "s/@linux_container_version@/$linux_container_obs_fedora_version/" \
-    -e "s/@qemu_lite_obs_fedora_version@/$qemu_lite_obs_fedora_version/g" cc-runtime.spec-template > cc-runtime.spec
-
-sed -e "s/@VERSION@/$VERSION/" \
-    -e "s/@HASH@/$short_hashtag/" debian.rules-template > debian.rules
-
-sed -e "s/@VERSION@/$VERSION/g"\
-    -e "s/@RELEASE@/$RELEASE/g" \
-    -e "s/@HASH@/$short_hashtag/g" \
-    -e "s/@cc_proxy_version@/$proxy_obs_ubuntu_version/" \
-    -e "s/@cc_shim_version@/$shim_obs_ubuntu_version/" \
-    -e "s/@cc_image_version@/$image_obs_ubuntu_version/" \
-    -e "s/@qemu_lite_version@/$qemu_lite_obs_ubuntu_version/" \
-    -e "s/@linux_container_version@/$linux_container_obs_ubuntu_version/" \
-    -e "s/@qemu_lite_obs_ubuntu_version@/$qemu_lite_obs_ubuntu_version/" cc-runtime.dsc-template > cc-runtime.dsc
-
-sed -e "s/@VERSION@/$VERSION/" \
-    -e "s/@HASH_TAG@/$short_hashtag/" \
-    -e "s/@cc_proxy_version@/$proxy_obs_ubuntu_version/" \
-    -e "s/@cc_shim_version@/$shim_obs_ubuntu_version/" \
-    -e "s/@cc_image_version@/$image_obs_ubuntu_version/" \
-    -e "s/@qemu_lite_version@/$qemu_lite_obs_ubuntu_version/" \
-    -e "s/@linux_container_version@/$linux_container_obs_ubuntu_version/" \
-    -e "s/@qemu_lite_obs_ubuntu_version@/$qemu_lite_obs_ubuntu_version/"  debian.control-template > debian.control
-
-# If OBS_REVISION is not empty, which means a branch or commit ID has been passed as argument,
-# replace It as @REVISION@ it in the OBS _service file. Otherwise, use the VERSION variable,
-# which uses the version from versions.txt.
-# This will determine which source tarball will be retrieved from github.com
-if [ -n "$OBS_REVISION" ]; then
-    sed "s/@REVISION@/$OBS_REVISION/" _service-template > _service
-else
-    sed "s/@REVISION@/$VERSION/"  _service-template > _service
-fi
-
-# Update and package OBS
-if [ "$OBS_PUSH" = true ]
-then
-    temp=$(basename $0)
-    TMPDIR=$(mktemp -d -u -t ${temp}.XXXXXXXXXXX) || exit 1
-    osc $APIURL co "$OBS_RUNTIME_REPO" -o $TMPDIR
-
-    mv cc-runtime.spec \
-       cc-runtime.dsc \
-       debian.control \
-       debian.rules \
-        _service \
-        $TMPDIR
-    rm $TMPDIR/*.patch
-    [ -f $TMPDIR/debian.series ] && rm $TMPDIR/debian.series || :
-    cp debian.changelog \
-        debian.compat \
-        cc-runtime-bin.install \
-        cc-runtime-config.install \
-        *.patch \
-        debian.postinst \
-        $TMPDIR
-
-    cp ../scripts/apport_hook.py $TMPDIR/source_cc-runtime.py
-
-    [ -f debian.series ] && cp debian.series $TMPDIR || :
-    cd $TMPDIR
-
-    if [ -e "go1.8.3.linux-amd64.tar.gz" ]; then
-        rm go*.tar.gz
+    # If OBS_REVISION is not empty, which means a branch or commit ID has been passed as argument,
+    # replace It as @REVISION@ it in the OBS _service file. Otherwise, use the VERSION variable,
+    # which uses the version from versions.txt.
+    # This will determine which source tarball will be retrieved from github.com
+    if [ -n "$OBS_REVISION" ]; then
+	    sed "s/@REVISION@/$OBS_REVISION/" _service-template > _service
+    else
+	    sed "s/@REVISION@/$VERSION/"  _service-template > _service
     fi
-    osc $APIURL addremove
-    osc $APIURL commit -m "Update cc-runtime $VERSION: ${hash_tag:0:7}"
+}
+
+verify
+echo "Verify succeed."
+get_git_info
+set_versions $cc_runtime_hash
+changelog_update $VERSION
+template
+
+if [ "$LOCAL_BUILD" == "true" ] && [ "$OBS_PUSH" == "true" ]
+then
+    die "--local-build and --push are mutually exclusive."
+elif [ "$LOCAL_BUILD" == "true" ]
+then
+	checkout_repo $PROJECT_REPO
+	local_build
+	
+elif [ "$OBS_PUSH" == "true" ]
+then
+	checkout_repo $PROJECT_REPO
+	obs_push "cc-runtime"
 fi
+echo "OBS working copy directory: ${OBS_WORKDIR}"

@@ -3,72 +3,60 @@
 # ex: ts=8 sw=4 sts=4 et filetype=sh
 
 # Automation script to create specs to build clear containers kernel
-set -x
-
-AUTHOR=${AUTHOR:-$(git config user.name)}
-AUTHOR_EMAIL=${AUTHOR_EMAIL:-$(git config user.email)}
-
-OBS_PUSH=${OBS_PUSH:-false}
-OBS_CC_QEMU_REPO=${OBS_CC_QEMU_REPO:-home:clearcontainers:clear-containers-3-staging/qemu-lite}
+set -e
 
 source ../versions.txt
+source ../scripts/pkglib.sh
 
-VERSION=${1:-$qemu_lite_version}
+SCRIPT_NAME=$0
+SCRIPT_DIR=$(dirname $0)
+PKG_NAME="qemu-lite"
+VERSION=$qemu_lite_version
+RELEASE=$(cat release)
+APPORT_HOOK="source_qemu-lite.py"
 
-# If we are providing the branch or hash to build we'll take version as the hashtag
-[ -n "$1" ] && hash_tag=$VERSION || hash_tag=$qemu_lite_hash
-short_hashtag="${hash_tag:0:10}"
+BUILD_DISTROS=(Fedora_26 xUbuntu_16.04)
 
-function changelog_update {
-    d=$(date -R)
-    cp debian.changelog debian.changelog-bk
-    cat <<< "qemu-lite ($VERSION-$next_release) stable; urgency=medium
+GENERATED_FILES=(qemu-lite.dsc qemu-lite.spec debian.rules )
+STATIC_FILES=(debian.compat debian.control _service *.patch)
 
-  * Update qemu-lite $VERSION+$short_hashtag-$next_release
+COMMIT=false
+BRANCH=false
+LOCAL_BUILD=false
+OBS_PUSH=false
+VERBOSE=false
 
- -- $AUTHOR <$AUTHOR_EMAIL>  $d
-" > debian.changelog
+# Parse arguments
+cli "$@"
 
-    cat debian.changelog-bk >> debian.changelog
-    rm debian.changelog-bk
+[ "$VERBOSE" == "true" ] && set -x || true
+PROJECT_REPO=${PROJECT_REPO:-home:clearcontainers:clear-containers-3-staging/qemu-lite}
+[ -n "$APIURL" ] && APIURL="-A ${APIURL}" || true
+
+# Generate specs using templates
+function template(){
+    sed "s/\@VERSION\@/${VERSION}/g; s/\@RELEASE\@/${RELEASE}/g; s/\@QEMU_LITE_HASH\@/${qemu_lite_hash:0:10}/g" qemu-lite.spec-template > qemu-lite.spec
+    sed "s/\@VERSION\@/${VERSION}/g; s/\@RELEASE\@/${RELEASE}/g; s/\@QEMU_LITE_HASH\@/${qemu_lite_hash:0:10}/g" qemu-lite.dsc-template > qemu-lite.dsc
+    sed "s/\@VERSION\@/${VERSION}/g; s/\@RELEASE\@/${RELEASE}/g; s/\@QEMU_LITE_HASH\@/${qemu_lite_hash:0:10}/g" debian.rules-template > debian.rules
 }
 
-echo "Running: $0 $@"
+verify
+echo "Verify succeed."
+get_git_info
+changelog_update $VERSION
+template
 
-git checkout -- release debian.changelog
-last_release=$(< release)
-next_release=$(( $last_release + 1 ))
-echo ${next_release} > release
-echo "Update linux-container to: $VERSION-$next_release"
-
-changelog_update ${VERSION}
-
-sed "s/\@VERSION\@/${VERSION}/g; s/\@RELEASE\@/${next_release}/g; s/\@QEMU_LITE_HASH\@/${short_hashtag}/g" qemu-lite.spec-template > qemu-lite.spec
-sed "s/\@VERSION\@/${VERSION}/g; s/\@RELEASE\@/${next_release}/g; s/\@QEMU_LITE_HASH\@/${short_hashtag}/g" qemu-lite.dsc-template > qemu-lite.dsc
-sed "s/\@VERSION\@/${VERSION}/g; s/\@RELEASE\@/${next_release}/g; s/\@QEMU_LITE_HASH\@/${short_hashtag}/g" debian.rules-template > debian.rules
-
-if [ $? = 0 ] && [ "$OBS_PUSH" = true ]
+if [ "$LOCAL_BUILD" == "true" ] && [ "$OBS_PUSH" == "true" ]
 then
-    temp=$(basename $0)
-    TMPDIR=$(mktemp -d -t ${temp}.XXXXXXXXXXX) || exit 1
-    osc co "$OBS_CC_QEMU_REPO" -o $TMPDIR
-    mv qemu-lite.dsc \
-       qemu-lite.spec \
-       debian.rules \
-        $TMPDIR
-    rm -f $TMPDIR/*.patch
-    rm -f $TMPDIR/debian.series
-    cp debian.changelog \
-        debian.compat \
-        debian.control \
-        _service \
-        *.patch \
-        $TMPDIR
+    die "--local-build and --push are mutually exclusive."
+elif [ "$LOCAL_BUILD" == "true" ]
+then
+	checkout_repo $PROJECT_REPO
+	local_build
 
-    cp ../scripts/apport_hook.py $TMPDIR/source_qemu-lite.py
-
-    [ -f debian.series ] && cp debian.series $TMPDIR || :
-    cd $TMPDIR
-    osc addremove
-    osc commit -m "Update qemu-lite to: $VERSION-$next_release"
+elif [ "$OBS_PUSH" == "true" ]
+then
+	checkout_repo $PROJECT_REPO
+	obs_push "cc-runtime"
 fi
+echo "OBS working copy directory: ${OBS_WORKDIR}"
