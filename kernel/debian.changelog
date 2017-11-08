@@ -1,3 +1,9 @@
+linux-container (4.9.60-80) stable; urgency=medium
+
+  * Update kernel 4.9.60
+
+ -- Miguel Bernal Marin <miguel.bernal.marin@linux.intel.com>  Tue, 07 Nov 2017 16:01:11 -0600
+
 linux-container (4.9.58-79) stable; urgency=medium
 
   * Update kernel 4.9.58
