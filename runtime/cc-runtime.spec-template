@@ -23,7 +23,7 @@ BuildRequires: openSUSE-release
 %endif
 Requires: cc-runtime-bin
 Requires: cc-runtime-config
-%{!?el7:Requires: qemu-lite >= @qemu_lite_obs_fedora_version@ }
+%{!?el7 || !?suse_version:Requires: qemu-lite >= @qemu_lite_obs_fedora_version@ }
 Requires: clear-containers-image >= @cc_image_version@
 Requires: linux-container >= @linux_container_version@
 Requires: cc-proxy >= @cc_proxy_version@
