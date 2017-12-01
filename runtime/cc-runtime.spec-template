@@ -6,6 +6,12 @@
 %global IMPORTNAME %{DOMAIN}/%{ORG}/%{PROJECT}
 %global GO_VERSION 1.8.3
 
+%if 0%{?suse_version}
+%define LIBEXECDIR %{_libdir}
+%else
+%define LIBEXECDIR %{_libexecdir}
+%endif
+
 %undefine _missing_build_ids_terminate_build
 %define  debug_package %{nil}
 Name:      cc-runtime
@@ -77,6 +83,7 @@ mkdir -p $HOME/rpmbuild/BUILD/go/src/%{DOMAIN}/%{ORG}
 ln -s $HOME/rpmbuild/BUILD/cc-runtime-%{version} $HOME/rpmbuild/BUILD/go/src/%{IMPORTNAME}
 cd $HOME/rpmbuild/BUILD/go/src/%{IMPORTNAME}
 make PREFIX=/usr \
+   LIBEXECDIR=%{LIBEXECDIR} \
    SYSCONFDIR=/usr/share/defaults \
    LOCALSTATEDIR=/var \
    SHAREDIR=/usr/share \
@@ -95,6 +102,7 @@ export GOPATH=$HOME/rpmbuild/BUILD/go/
 
 cd $HOME/rpmbuild/BUILD/go/src/%{IMPORTNAME}
 make install \
+   LIBEXECDIR=%{LIBEXECDIR} \
    DESTDIR=%{buildroot} \
    PREFIX=/usr \
    SYSCONFDIR=/etc \
