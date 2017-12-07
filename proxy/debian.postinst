@@ -1,0 +1,9 @@
+#!/bin/bash
+# Ensure that *all* the following commands run.
+set +e
+
+systemctl stop cc-proxy.socket
+systemctl stop cc-proxy.service
+[ -e /usr/lib/systemd/system/cc-proxy.service ] && rm /usr/lib/systemd/system/cc-proxy.service || true
+[ -e /usr/lib/systemd/system/cc-proxy.socket ] && rm /usr/lib/systemd/system/cc-proxy.socket || true
+systemctl daemon-reload
