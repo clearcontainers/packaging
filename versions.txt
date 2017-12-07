@@ -2,12 +2,14 @@ cc_proxy_hash=ad64d65f4b631d21950f3c83a341e139719ba586
 cc_runtime_hash=585c5304d78fe05d371c0a5cf670a5014cb929a3
 cc_shim_hash=ea78a08442c83e4c65a8b37f920b9af9de05e666
 qemu_lite_hash=d4a337fe919e4e147a721c2ff96313ce84b87c7b
+ksm_throttler_hash=fd007eac8165b6f1d0d053984f7fd4d5d60f6210
 cc_proxy_version=3.0.11
 cc_runtime_version=3.0.11
 cc_shim_version=3.0.11
 clear_vm_kernel_version=4.9.60
 clear_vm_image_version=19350
 qemu_lite_version=2.7.1
+ksm_throttler_version=0.0.1
 
 # Golang
 go_version=1.9.2
