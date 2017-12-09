@@ -1340,7 +1340,7 @@ CONFIG_NET_VENDOR_INTEL=y
 # CONFIG_IGBVF is not set
 # CONFIG_IXGB is not set
 CONFIG_IXGBE=y
-# CONFIG_IXGBEVF is not set
+CONFIG_IXGBEVF=y
 # CONFIG_I40E is not set
 # CONFIG_I40EVF is not set
 # CONFIG_FM10K is not set
