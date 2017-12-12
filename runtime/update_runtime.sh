@@ -46,10 +46,13 @@ function template()
 	    -e "s/@cc_image_version@/$image_obs_fedora_version/" \
 	    -e "s/@linux_container_version@/$linux_container_obs_fedora_version/" \
 	    -e "s/@qemu_lite_obs_fedora_version@/$qemu_lite_obs_fedora_version/g" \
+	    -e "s/@GO_VERSION@/$go_version/" \
 	    cc-runtime.spec-template > cc-runtime.spec
 
     sed -e "s/@VERSION@/$VERSION/" \
-	    -e "s/@HASH@/$short_hashtag/" debian.rules-template > debian.rules
+        -e "s/@HASH@/$short_hashtag/" \
+        -e "s/@GO_VERSION@/$go_version/" \
+        debian.rules-template > debian.rules
 
     sed -e "s/@VERSION@/$VERSION/g"\
 	    -e "s/@RELEASE@/$RELEASE/g" \
@@ -77,9 +80,15 @@ function template()
     # which uses the version from versions.txt.
     # This will determine which source tarball will be retrieved from github.com
     if [ -n "$OBS_REVISION" ]; then
-	    sed "s/@REVISION@/$OBS_REVISION/" _service-template > _service
+        sed -e "s/@REVISION@/$OBS_REVISION/" \
+            -e "s/@GO_VERSION@/$go_version/g" \
+            -e "s/@GO_CHECKSUM@/$go_checksum/" \
+            _service-template > _service
     else
-	    sed "s/@REVISION@/$VERSION/"  _service-template > _service
+        sed -e "s/@REVISION@/$VERSION/" \
+            -e "s/@GO_VERSION@/$go_version/g" \
+            -e "s/@GO_CHECKSUM@/$go_checksum/" \
+            _service-template > _service
     fi
 }
 

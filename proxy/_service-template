@@ -13,11 +13,11 @@
  <service name="download_url">
     <param name="protocol">https</param>
     <param name="host">storage.googleapis.com</param>
-    <param name="path">golang/go1.8.3.linux-amd64.tar.gz</param>
+    <param name="path">golang/go@GO_VERSION@.linux-amd64.tar.gz</param>
  </service>
  <service name="verify_file">
-    <param name="file">_service:download_url:go1.8.3.linux-amd64.tar.gz</param>
+    <param name="file">_service:download_url:go@GO_VERSION@.linux-amd64.tar.gz</param>
     <param name="verifier">sha256</param>
-    <param name="checksum">1862f4c3d3907e59b04a757cfda0ea7aa9ef39274af99a784f5be843c80c6772</param>
+    <param name="checksum">@GO_CHECKSUM@</param>
   </service>
 </services>

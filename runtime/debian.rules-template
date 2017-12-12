@@ -7,13 +7,15 @@ export GOPATH=/usr/src/packages/BUILD/go
 export GOROOT=/usr/src/packages/BUILD/local/go
 export DH_OPTIONS
 
+GO_VERSION=@GO_VERSION@
+
 %:
 	dh $@
 
 override_dh_auto_build:
 	mkdir -p /usr/src/packages/BUILD/local/
 	mkdir -p /usr/src/packages/BUILD/go/src/github.com/clearcontainers/
-	tar xzf /usr/src/packages/SOURCES/go1.8.3.linux-amd64.tar.gz -C /usr/src/packages/BUILD/local
+	tar xzf /usr/src/packages/SOURCES/go$(GO_VERSION).linux-amd64.tar.gz -C /usr/src/packages/BUILD/local
 	ln -s /usr/src/packages/BUILD /usr/src/packages/BUILD/go/src/github.com/clearcontainers/runtime
 	cd $(GOPATH)/src/github.com/clearcontainers/runtime/; \
 	make PREFIX=/usr \

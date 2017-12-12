@@ -9,6 +9,11 @@ clear_vm_kernel_version=4.9.60
 clear_vm_image_version=19490
 qemu_lite_version=2.7.1
 
+# Golang
+go_version=1.9.2
+# sha256 checksum for the go_version binary distribution ("go${go_version}.linux-amd64.tar.gz")
+go_checksum=de874549d9a8d8d8062be05808509c09a88a248e77ec14eb77453530829ac02b
+
 # OBS package versions
 # Versions matches the ones in the OBS stable release.
 # When making a new release of the runtime, this file
