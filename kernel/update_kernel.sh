@@ -15,11 +15,12 @@ VERSION=$clear_vm_kernel_version
 RELEASE=$(cat release)
 BUILD_DISTROS=(Fedora_26 xUbuntu_16.04)
 
+KR_CONFIG_FILENAME=kernel-config-4.9.x
 KR_REL=https://www.kernel.org/releases.json
 KR_SHA=https://cdn.kernel.org/pub/linux/kernel/v4.x/sha256sums.asc
 KR_LTS=4.9
 
-GENERATED_FILES=(linux-container.dsc linux-container.spec _service)
+GENERATED_FILES=(linux-container.dsc linux-container.spec _service config)
 STATIC_FILES=(debian.dirs debian.rules debian.compat debian.control debian.copyright patches-4.9.x/*.patch)
 OBS_CC_KERNEL_REPO=${OBS_CC_KERNEL_REPO:-home:clearcontainers:clear-containers-3-staging/$PKG_NAME}
 
@@ -41,6 +42,9 @@ then
 fi
 
 kernel_sha256=$(curl -L -s -f ${KR_SHA} | awk '/linux-'${VERSION}'.tar.xz/ {print $1}')
+
+# Copy the kernel config file
+cp $KR_CONFIG_FILENAME config
 
 # Generate specs using templates
 function template()
