@@ -1,12 +1,12 @@
-cc_proxy_hash=513b073c2917a501e2ac9ff6f0feb4f74d0e5749
-cc_runtime_hash=3d402d1aa586b4fd044f3da74ac0b557f7f52e4a
-cc_shim_hash=0952966319453f79958e014648fc930a12784ab4
+cc_proxy_hash=ad64d65f4b631d21950f3c83a341e139719ba586
+cc_runtime_hash=585c5304d78fe05d371c0a5cf670a5014cb929a3
+cc_shim_hash=ea78a08442c83e4c65a8b37f920b9af9de05e666
 qemu_lite_hash=d4a337fe919e4e147a721c2ff96313ce84b87c7b
-cc_proxy_version=3.0.10
-cc_runtime_version=3.0.10
-cc_shim_version=3.0.10
+cc_proxy_version=3.0.11
+cc_runtime_version=3.0.11
+cc_shim_version=3.0.11
 clear_vm_kernel_version=4.9.60
-clear_vm_image_version=19490
+clear_vm_image_version=19350
 qemu_lite_version=2.7.1
 
 # OBS package versions
@@ -15,16 +15,16 @@ qemu_lite_version=2.7.1
 # should contain the new versions.
 
 # Fedora
-proxy_obs_fedora_version=3.0.10+git.513b073-15.1
-shim_obs_fedora_version=3.0.10+git.0952966-15.1
-image_obs_fedora_version=19490-41.1
+proxy_obs_fedora_version=3.0.11+git.ad64d65-16.1
+shim_obs_fedora_version=3.0.11+git.ea78a08-16.1
+image_obs_fedora_version=19350-42.1
 selinux_obs_fedora_version=0.1-4.1
-linux_container_obs_fedora_version=4.9.58-79.1
+linux_container_obs_fedora_version=4.9.60-81.1
 qemu_lite_obs_fedora_version=2.7.1+git.d4a337fe91-9.1
 
 # Ubuntu
-proxy_obs_ubuntu_version=3.0.10+git.513b073-15
-shim_obs_ubuntu_version=3.0.10+git.0952966-15
-image_obs_ubuntu_version=19490-41
-linux_container_obs_ubuntu_version=4.9.58-79
+proxy_obs_ubuntu_version=3.0.11+git.ad64d65-16
+shim_obs_ubuntu_version=3.0.11+git.ea78a08-16
+image_obs_ubuntu_version=19350-42
+linux_container_obs_ubuntu_version=4.9.60-81
 qemu_lite_obs_ubuntu_version=2.7.1+git.d4a337fe91-9
