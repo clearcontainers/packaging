@@ -31,8 +31,9 @@ groups:
       - clear-containers
 
   approvers:
-    required: 1
+    required: 2
     users:
+      - amshinde
       - erick0z
       - gorozco1
       - grahamwhaley
