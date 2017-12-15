@@ -61,6 +61,8 @@ function template()
     sed "s/\@VERSION\@/$VERSION/g; s/\@RELEASE\@/$RELEASE/g" linux-container.spec-template > linux-container.spec
     sed "s/\@VERSION\@/$VERSION/g; s/\@RELEASE\@/$RELEASE/g" linux-container.dsc-template > linux-container.dsc
     sed "s/\@VERSION\@/$VERSION/g; s/\@KERNEL_SHA256\@/$kernel_sha256/g" _service-template > _service
+    sed "s/\@KERNEL_VERSION\@/${VERSION}-${RELEASE}.container/g" linux-container.install
+    sed "s/\@KERNEL_VERSION\@/${VERSION}-${RELEASE}.container/g" linux-container-debug.install
 }
 
 verify
