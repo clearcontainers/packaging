@@ -15,13 +15,19 @@ VERSION=$clear_vm_kernel_version
 RELEASE=$(cat release)
 BUILD_DISTROS=(Fedora_26 xUbuntu_16.04)
 
-KR_CONFIG_FILENAME=kernel-config-4.9.x
+KR_SERIES="$(echo $VERSION | cut -d "." -f 1).x"
+KR_LTS=$(echo $VERSION | cut -d "." -f 1,2)
+KR_CONFIG_FILENAME=kernel-config-"${KR_LTS}".x
+KR_CONFIG_FILE_PATTERN=kernel-config-"${KR_LTS}"
+KR_PATCH_DIR_PATTERN="patches-${KR_LTS}*"
+KR_PATCHES=$(eval find "$KR_PATCH_DIR_PATTERN" -type f -name "*.patch")
+
 KR_REL=https://www.kernel.org/releases.json
-KR_SHA=https://cdn.kernel.org/pub/linux/kernel/v4.x/sha256sums.asc
-KR_LTS=4.9
+KR_SHA=https://cdn.kernel.org/pub/linux/kernel/v"${KR_SERIES}"/sha256sums.asc
 
 GENERATED_FILES=(linux-container.dsc linux-container.spec _service config)
-STATIC_FILES=(debian.dirs debian.rules debian.compat debian.control debian.copyright patches-4.9.x/*.patch)
+STATIC_FILES=(debian.dirs debian.rules debian.compat debian.control debian.copyright)
+STATIC_FILES+=($KR_PATCHES)
 OBS_CC_KERNEL_REPO=${OBS_CC_KERNEL_REPO:-home:clearcontainers:clear-containers-3-staging/$PKG_NAME}
 
 COMMIT=false
@@ -42,6 +48,9 @@ then
 fi
 
 kernel_sha256=$(curl -L -s -f ${KR_SHA} | awk '/linux-'${VERSION}'.tar.xz/ {print $1}')
+
+# Generate the kernel config file
+generate_kernel_config $VERSION $KR_CONFIG_FILENAME
 
 # Copy the kernel config file
 cp $KR_CONFIG_FILENAME config
