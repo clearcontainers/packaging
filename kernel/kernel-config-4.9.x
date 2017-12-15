@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 4.9.54 Kernel Configuration
+# Linux/x86 4.9.58-79.container Kernel Configuration
 #
 CONFIG_64BIT=y
 CONFIG_X86_64=y
@@ -403,7 +403,7 @@ CONFIG_HPET_TIMER=y
 CONFIG_SWIOTLB=y
 CONFIG_IOMMU_HELPER=y
 # CONFIG_MAXSMP is not set
-CONFIG_NR_CPUS=8
+CONFIG_NR_CPUS=255
 CONFIG_SCHED_SMT=y
 CONFIG_SCHED_MC=y
 CONFIG_PREEMPT_NONE=y
