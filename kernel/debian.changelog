@@ -1,3 +1,9 @@
+linux-container (4.9.60-81) stable; urgency=medium
+
+  * Update linux-container 4.9.60
+
+ -- Erick Cardona <erick.cardona.ruiz@intel.com>  Fri, 15 Dec 2017 01:30:58 +0000
+
 linux-container (4.9.60-80) stable; urgency=medium
 
   * Update kernel 4.9.60
