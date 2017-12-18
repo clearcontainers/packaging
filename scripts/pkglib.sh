@@ -164,6 +164,52 @@ function checkout_repo()
     cp ../scripts/apport_hook.py $OBS_WORKDIR/$APPORT_HOOK
 }
 
+
+# generate_kernel_config function takes 2 arguments: a kernel version
+# and a filename of the kernel configfile. This one will be created and commited back when
+# doing a kernel update.
+function generate_kernel_config() {
+    local kernel_version=$1
+    [[ ! "$kernel_version" =~ ^[0-9]\.[0-9]{1,3}\.[0-9]{1,3}$ ]] && die "Wrong kernel version supplied"
+
+    local config_file=$2
+    [ -z "$config_file" ] && die "No kernel config filename supplied"
+    [ -e "$config_file" ] && echo "INFO: ${config_file} exists, it will be overwritten!"
+
+    # Temporary directory to decompress the kernel
+    local tmpdir=$(mktemp -d)
+
+    local kernel_tarball_suffix=".tar.xz"
+    local kernel_url=https://www.kernel.org/pub/linux/kernel/v"${KR_SERIES}"/linux-"${kernel_version}${kernel_tarball_suffix}"
+    local kernel_tree_dir="${tmpdir}/linux-${kernel_version}"
+
+    # Download the kernel source tree tarball and decompress it in ${tmpdir}
+    [ ! -e "${kernel_tree_dir}${kernel_tarball_suffix}" ] &&
+        curl -o "${kernel_tree_dir}${kernel_tarball_suffix}" -L $kernel_url || true
+    tar -C $tmpdir -xf "${kernel_tree_dir}${kernel_tarball_suffix}"
+
+    # Generate a new kernel config file based on the one in this repo
+    cp "${config_file}" "${kernel_tree_dir}/.config"
+    pushd "${kernel_tree_dir}"
+    make -s ARCH=x86_64 oldconfig
+    popd
+
+    # Remove old config and replace it with the new one
+    rm -f "${config_file}"
+    cp "${kernel_tree_dir}/.config" $config_file
+
+    # If Kernel config file has changed, create a commit adding the new config.
+    for file in $(git status -s | awk '/^\ M/ {print $2}'); do
+        if [ "$file" == "$config_file" ]; then
+            git add "$config_file"
+            git commit -s -m "$(echo -e "kernel: automatic config update\\n\\nApplied 'make oldconfig' changes.")" "$kernel_filename"
+	fi
+    done
+
+    # remove the kernel tree
+    rm -rf "${kernel_tree_dir}"
+}
+
 function obs_push()
 {
     pushd $OBS_WORKDIR
