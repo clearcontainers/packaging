@@ -44,19 +44,19 @@ Overview
 %define _unpackaged_files_terminate_build 0
 
 %package bin
-Summary: bin components for the cc-oci-proxy package.
+Summary: bin components for the cc-proxy package.
 Group: Binaries
 Requires: cc-proxy-config
 
 %description bin
-bin components for the cc-oci-proxy package.
+bin components for the cc-proxy package.
 
 %package config
-Summary: config components for the cc-oci-proxy package.
+Summary: config components for the cc-proxy package.
 Group: Default
 
 %description config
-config components for the cc-oci-proxy package.
+config components for the cc-proxy package.
 
 %prep
 mkdir local

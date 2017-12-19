@@ -26,11 +26,11 @@ Overview
 --------
 
 %package bin
-Summary: bin components for the cc-oci-shim package.
+Summary: bin components for the cc-shim package.
 Group: Binaries
 
 %description bin
-bin components for the cc-oci-shim package.
+bin components for the cc-shim package.
 
 %prep
 %setup -q

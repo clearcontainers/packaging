@@ -53,19 +53,19 @@ Overview
 --------
 
 %package bin
-Summary: bin components for the cc-oci-runtime package.
+Summary: bin components for the cc-runtime package.
 Group: Binaries
 Requires: cc-runtime-config
 
 %description bin
-bin components for the cc-oci-runtime package.
+bin components for the cc-runtime package.
 
 %package config
-Summary: config components for the cc-oci-runtime package.
+Summary: config components for the cc-runtime package.
 Group: Default
 
 %description config
-config components for the cc-oci-runtime package.
+config components for the cc-runtime package.
 
 %prep
 mkdir local
