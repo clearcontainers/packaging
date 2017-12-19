@@ -63,6 +63,14 @@ Patch0209: 0209-HACK-9P-always-use-cached-inode-to-fill-in-v9fs_vfs_.patch
 %description
 The Linux kernel.
 
+%package debug
+Summary: Debug components for the linux-container package.
+Group: Default
+
+%description debug
+Debug components for the linux-container package.
+This package includes the kernel config and the kernel map.
+
 %prep
 %setup -q -n linux-@VERSION@
 
@@ -132,6 +140,9 @@ InstallKernel() {
     chmod 755 ${KernelDir}/vmlinux-$KernelVer
     ln -sf vmlinux-$KernelVer ${KernelDir}/vmlinux.container
 
+    cp .config "${KernelDir}/config-${KernelVer}"
+    cp System.map "${KernelDir}/System.map-${KernelVer}"
+
     rm -f %{buildroot}/usr/lib/modules/$KernelVer/build
     rm -f %{buildroot}/usr/lib/modules/$KernelVer/source
 }
@@ -146,3 +157,8 @@ rm -rf %{buildroot}/usr/lib/firmware
 /usr/share/clear-containers/vmlinux.container
 /usr/share/clear-containers/vmlinuz-%{kversion}
 /usr/share/clear-containers/vmlinuz.container
+
+%files debug
+%defattr(-,root,root,-)
+/usr/share/clear-containers/config-%{kversion}
+/usr/share/clear-containers/System.map-%{kversion}

@@ -11,6 +11,10 @@ Debtransform-Tar: linux-@VERSION@.tar.xz
 
 Package: linux-container
 Architecture: amd64
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${perl:Depends},
 Description: linux kernel optimised for container-like workloads.
  Linux kernel optimised for container-like workloads
+
+Package: linux-container-debug
+Architecture: amd64
+Description: Debug components for the linux-container package.
+ This package includes the kernel config and the kernel map.
