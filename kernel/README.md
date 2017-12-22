@@ -44,27 +44,42 @@ export OBS_CC_KERNEL_REPO=home:patux:clear-containers-2.1/linux-container
 
 To update the Intel® Clear Containers kernel the next sequence is follow
 
-     ┌─────────────────────────┐                   ┌───┐          ┌─────────────────────┐
-     │clearcontainers/packaging│                   │OBS│          │clearcontainers/linux│
-     └────────────┬────────────┘                   └─┬─┘          └──────────┬──────────┘
-                  │     Test next build release      │                       │           
-                  │─────────────────────────────────>│                       │           
-                  │                                  │                       │           
-                  │            Build OK              │                       │           
-                  │<─────────────────────────────────│                       │           
-                  │                                  │                       │           
-                  │Build on clear-containers-staging │                       │           
-                  │─────────────────────────────────>│                       │           
-                  │                                  │                       │           
-                  │            Build OK              │                       │           
-                  │<─────────────────────────────────│                       │           
-                  │                                  │                       │           
-                  ────┐                              │                       │           
-                      │ Send PR of new kernel release│                       │           
-                  <───┘                              │                       │           
-                  │                                  │                       │           
-                  │                 Update with new release                  │           
-                  │─────────────────────────────────────────────────────────>│           
-     ┌────────────┴────────────┐                   ┌─┴─┐          ┌──────────┴──────────┐
-     │clearcontainers/packaging│                   │OBS│          │clearcontainers/linux│
-     └─────────────────────────┘                   └───┘          └─────────────────────┘
+     ┌─────────────────────────┐                   ┌───┐          ┌─────────────────────┐      ┌─────────────────────────┐
+     │clearcontainers/packaging│                   │OBS│          │clearcontainers/linux│      │clearcontainers/osbuilder│
+     └────────────┬────────────┘                   └─┬─┘          └──────────┬──────────┘      └──────────┬──────────────┘
+                  ────┐                              │                       │                            │
+                      │ Send PR for kernel changes   │                       │                            │
+                      │ bump release file            │                       │                            │
+                  <───┘                              │                       │                            │
+                  │                                  │                       │                            │
+                  │                                  │                       │Used by ci to test kernel   │
+                  │                                  │                       │before create packages      │
+                  │                                  │                       │ vX.Y.ZZ-{release}.container-binaries.tar.gz
+                  │                                  │                       │                            │
+                  │                                  │                       │                            │
+                  │                                  │                       │               Used by osbuilder to create
+                  │                                  │                       │               a custom kernel
+                  │─────────────────────────────────────────────────────────>│ vX.Y.ZZ-{release}.container.tar.gz
+                  │                                  │                       │──────────────────────────> │           
+                  │                                  │                       │                            │           
+                  │     Test next build packagerelease                       │                            │           
+                  │─────────────────────────────────>│                       │                            │           
+                  │                                  │                       │                            │           
+                  │            Build OK              │                       │                            │           
+                  │<─────────────────────────────────│                       │                            │           
+                  │                                  │                       │                            │           
+                  ────┐                              │                       │                            │           
+                      │ Send PR of new kernel package release                │                            │           
+                  <───┘                              │                       │                            │           
+                  │                 Update with new release                  │                            │
+                  │                                  │                       │                            │           
+     ┌────────────┴────────────┐                   ┌─┴─┐          ┌──────────┴──────────┐      ┌──────────┴──────────────┐
+     │clearcontainers/packaging│                   │OBS│          │clearcontainers/linux│      │clearcontainers/osbuilder│
+     └─────────────────────────┘                   └───┘          └─────────────────────┘      └─────────────────────────┘
+
+## Send PR of new kernel release ##
+
+For a new kernel release is need to update the file `release` from this
+directory. The release number needs to be incremented for each new
+release. It is recommended to update do a version bump for each PR that
+changes the kernel version, patches or configuration.
