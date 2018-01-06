@@ -13,7 +13,7 @@ Package: cc-runtime
 Architecture: amd64
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${perl:Depends}, cc-runtime-bin, cc-runtime-config, qemu-lite (>= @qemu_lite_obs_ubuntu_version@),
                           clear-containers-image (>= @cc_image_version@), linux-container (>= @linux_container_version@),
-			  cc-proxy (>= @cc_proxy_version@), cc-shim (>= @cc_shim_version@)
+			  cc-proxy (>= @cc_proxy_version@), cc-shim (>= @cc_shim_version@), cc-ksm-throttler(>= @cc_ksm_throttler_version@)
 Provides: cc-oci-runtime
 Conflicts: cc-oci-runtime
 Replaces: cc-oci-runtime
