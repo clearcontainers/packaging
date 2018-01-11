@@ -73,7 +73,12 @@ function release(){
 	[ "${runtime_version}" == "${shim_version}" ] || die "shim version is not equals to runtime version"
 	[ "${runtime_version}" == "${proxy_version}" ] || die "proxy version is not equals to runtime version"
 
-	${release_tool} --owner "${owner}" release --version "${next_version}" "${repo}"
+	repos=( shim proxy runtime )
+	clearcontainers_version="${runtime_version}"
+	for repo in "${repos[@]}"; do
+		echo "Release ${repo}"
+		echo ${release_tool} --owner "${owner}" release --version "${clearcontainers_version}" "${repo}"
+	done
 }
 
 build_release_tool
