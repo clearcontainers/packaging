@@ -47,6 +47,7 @@ function template()
 	    -e "s/@linux_container_version@/$linux_container_obs_fedora_version/" \
 	    -e "s/@qemu_lite_obs_fedora_version@/$qemu_lite_obs_fedora_version/g" \
 	    -e "s/@GO_VERSION@/$go_version/" \
+	    -e "s/@cc_ksm_throttler_version@/$ksm_throttler_version/" \
 	    cc-runtime.spec-template > cc-runtime.spec
 
     sed -e "s/@VERSION@/$VERSION/" \
@@ -63,6 +64,7 @@ function template()
 	    -e "s/@qemu_lite_version@/$qemu_lite_obs_ubuntu_version/" \
 	    -e "s/@linux_container_version@/$linux_container_obs_ubuntu_version/" \
 	    -e "s/@qemu_lite_obs_ubuntu_version@/$qemu_lite_obs_ubuntu_version/" \
+	    -e "s/@cc_ksm_throttler_version@/$ksm_throttler_version/" \
 	    cc-runtime.dsc-template > cc-runtime.dsc
 
     sed -e "s/@VERSION@/$VERSION/" \
@@ -73,6 +75,7 @@ function template()
 	    -e "s/@qemu_lite_version@/$qemu_lite_obs_ubuntu_version/" \
 	    -e "s/@linux_container_version@/$linux_container_obs_ubuntu_version/" \
 	    -e "s/@qemu_lite_obs_ubuntu_version@/$qemu_lite_obs_ubuntu_version/"  \
+	    -e "s/@cc_ksm_throttler_version@/$ksm_throttler_version/" \
 	    debian.control-template > debian.control
 
     # If OBS_REVISION is not empty, which means a branch or commit ID has been passed as argument,

@@ -38,6 +38,7 @@ Requires: clear-containers-image >= @cc_image_version@
 Requires: linux-container >= @linux_container_version@
 Requires: cc-proxy >= @cc_proxy_version@
 Requires: cc-shim >= @cc_shim_version@
+Requires: cc-ksm-throttler >= @cc_ksm_throttler_version@
 
 Conflicts: cc-oci-runtime
 Conflicts: cc-oci-runtime-bin
