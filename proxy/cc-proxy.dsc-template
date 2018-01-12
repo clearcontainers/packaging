@@ -12,6 +12,9 @@ Debtransform-Tar: cc-proxy-@VERSION@+git.@HASH@.tar.gz
 Package: cc-proxy
 Architecture: amd64
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${perl:Depends}
+Provides: cc-proxy-config
+Conflicts: cc-proxy-config
+Replaces: cc-proxy-config
 Description:
  cc-proxy works alongside the Clear Containers runtime and shim to provide a VM-based OCI runtime solution.
  cc-proxy is a daemon offering access to the hyperstart VM agent to both the runtime and shim processes.

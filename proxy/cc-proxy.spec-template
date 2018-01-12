@@ -25,12 +25,13 @@ Group    : Development/Tools
 License  : Apache-2.0
 
 Requires: cc-proxy-bin
-Requires: cc-proxy-config
 
 %if 0%{?fedora} >= 20 || 0%{?centos} >= 7 || 0%{?rhel} >= 7 || 0%{?oraclelinux} >= 7
 Requires: clear-containers-selinux
 %endif
 
+Conflicts: cc-proxy-config
+Obsoletes: cc-proxy-config
 
 %description
 .. contents::
@@ -46,17 +47,9 @@ Overview
 %package bin
 Summary: bin components for the cc-proxy package.
 Group: Binaries
-Requires: cc-proxy-config
 
 %description bin
 bin components for the cc-proxy package.
-
-%package config
-Summary: config components for the cc-proxy package.
-Group: Default
-
-%description config
-config components for the cc-proxy package.
 
 %prep
 mkdir local
@@ -74,13 +67,19 @@ ln -s %{_builddir}/%{name}-%{version} $HOME/rpmbuild/BUILD/go/src/%{IMPORTNAME}
 cd $HOME/rpmbuild/BUILD/go/src/%{IMPORTNAME}
 make LIBEXECDIR=%{LIBEXECDIR} VERSION=@VERSION_STRING@
 
-%check
-export http_proxy=http://127.0.0.1:9/
-export https_proxy=http://127.0.0.1:9/
-export no_proxy=localhost
+%clean
+echo "Clean build root"
+rm -rf %{buildroot}
 
 %install
 make install DESTDIR=%{buildroot} LIBEXECDIR=%{LIBEXECDIR} VERSION=@VERSION_STRING@
+
+%post
+# ensure that *all* the following commands run.
+set +e
+systemctl stop cc-proxy.socket
+systemctl stop cc-proxy.service
+systemctl daemon-reload
 
 %files
 %defattr(-,root,root,-)
@@ -89,8 +88,3 @@ make install DESTDIR=%{buildroot} LIBEXECDIR=%{LIBEXECDIR} VERSION=@VERSION_STRI
 %defattr(-,root,root,-)
 %{LIBEXECDIR}/clear-containers
 %{LIBEXECDIR}/clear-containers/cc-proxy
-
-%files config
-%defattr(-,root,root,-)
-/usr/lib/systemd/system/cc-proxy.service
-/usr/lib/systemd/system/cc-proxy.socket

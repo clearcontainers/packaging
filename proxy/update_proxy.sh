@@ -18,7 +18,7 @@ APPORT_HOOK="source_cc-proxy.py"
 BUILD_DISTROS=(Fedora_26 xUbuntu_16.04)
 
 GENERATED_FILES=(cc-proxy.spec cc-proxy.dsc debian.control debian.rules _service)
-STATIC_FILES=(debian.changelog debian.compat)
+STATIC_FILES=(debian.changelog debian.compat debian.postinst)
 
 COMMIT=false
 BRANCH=false
