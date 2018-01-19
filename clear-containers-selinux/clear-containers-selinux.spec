@@ -21,7 +21,7 @@
 # Package information
 Name:			clear-containers-selinux
 Version:		0.1
-Release:		1%{?dist}
+Release:		5.<B_CNT>
 License:		GPLv2
 Group:			System Environment/Base
 Summary:		SELinux Policies for Clear Containers
