@@ -35,3 +35,6 @@ shim_obs_ubuntu_version=3.0.14+git.3b5e854-19
 image_obs_ubuntu_version=19350-44
 linux_container_obs_ubuntu_version=4.9.60-84
 qemu_lite_obs_ubuntu_version=2.7.1+git.d4a337fe91-11
+
+# Current LTS Linux Kernel Version
+current_lts_linux=4.9.78
