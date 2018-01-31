@@ -41,3 +41,43 @@ Usage:
    $ ./get-image-changes.sh VERSION-TO-UPDATE > changes
    $ cat changes
 ```
+
+## `kernel_monitor/kernel_monitor.py`
+
+This script fetches the latest kernel information and looks for new LTS releases.
+If it finds a new LTS release it sends an email to the selected recipients.
+
+Requirements:
+
+* python3
+* python dependencies (see the [requirements file](https://github.com/clearcontainers/packaging/scripts/kernel_monitor/requirements))
+* pip
+* postfix
+
+Usage:
+
+NOTE: The following commands can be executed if you have a Fedora 27 system that meets all requirements,
+and a postfix server running on 127.0.0.1 or localhost.
+
+Install python dependencies:
+
+NOTE: It is strongly recommended to run this script in a Python virtual environment with `virtualenv`.
+```
+$ cd kernel_monitor
+$ virtualenv km
+$ source km/bin/activate
+$ pip install -r requirements
+```
+
+Execute the following script:
+```
+$ chmod +x kernel_monitor.py
+$ ./kernel_monitor.py
+```
+
+This sends an email if there is a new LTS release and logs the events to a file.
+For more information about how to change the email recipients, the log file name or the
+postfix server address, execute the script with `--help` to see the options:
+```
+$ ./kernel_monitor.py --help
+```
