@@ -1,7 +1,7 @@
 <services>
   <service name="download_url">
     <param name="protocol">https</param>
-    <param name="host">download.clearlinux.org</param>
-    <param name="path">/releases/@VERSION@/clear/clear-@VERSION@-containers.tar.xz</param>
+    <param name="host">github.com</param>
+    <param name="path">/clearcontainers/osbuilder/releases/download/cc-@VERSION@-agent-@AGENT_SHA@/image-cc-@VERSION@-agent-@AGENT_SHA@-binaries.tar.gz</param>
   </service>
 </services>

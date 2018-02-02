@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Delete previous images if exists
+for f in /usr/share/clear-containers/*.img; do
+    rm -f "$f"
+done
+

@@ -1,10 +1,15 @@
 #!/usr/bin/make -f
+
 version=@VERSION@
+agent_sha=@AGENT_SHA@
+
 %:
 	dh $@
+override_dh_auto_build:
 
-override_dh_install:
-	tar -C $(CURDIR) -xvJf ../SOURCES/clear-$(version)-containers.tar.xz
+override_dh_auto_install:
+	mkdir -p debian/clear-containers-image
+	tar -C $(CURDIR) -xvf ../SOURCES/image-cc-$(version)-agent-$(agent_sha)-binaries.tar.gz
 	echo "Installing clear-containers-image"
-	install containers.img $(CURDIR)/debian/clear-containers-image/usr/share/clear-containers/clear-$(version)-containers.img
-	ln -sf /usr/share/clear-containers/clear-$(version)-containers.img $(CURDIR)/debian/clear-containers-image/usr/share/clear-containers/clear-containers.img
+	install -D cc-$(version)-agent-$(agent_sha).img ./debian/clear-containers-image/usr/share/clear-containers/cc-$(version)-agent-$(agent_sha).img
+	ln -sf /usr/share/clear-containers/cc-$(version)-agent-$(agent_sha).img ./debian/clear-containers-image/usr/share/clear-containers/clear-containers.img
