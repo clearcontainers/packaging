@@ -1,3 +1,9 @@
+cc-proxy (3.0.16) stable; urgency=medium
+
+  * Update cc-proxy 3.0.16 28ff392
+
+ -- Erick Cardona <erick.cardona.ruiz@intel.com>  Tue, 06 Feb 2018 15:45:17 +0000
+
 cc-proxy (3.0.15) stable; urgency=medium
 
   * Update cc-proxy 3.0.15 98645fb

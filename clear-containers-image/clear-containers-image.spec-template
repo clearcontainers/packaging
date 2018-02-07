@@ -1,11 +1,15 @@
+%define version   @VERSION@
+%define release   @RELEASE@
+%define agent_sha @AGENT_SHA@
+
 Name:           clear-containers-image
-Version:        @VERSION@
-Release:        @RELEASE@.<B_CNT>
+Version:        %{version}
+Release:        %{release}.<B_CNT>
 License:        Artistic-1.0 BSD-3-Clause BSD-3-Clause-Clear BSD-4-Clause-UC GFDL-1.3 GPL-2.0 GPL-2.0+ GPL-3.0 GPL-3.0+ LGPL-2.0 LGPL-2.0+ LGPL-2.1 LGPL-3.0+ MIT MPL-2.0 Public-Domain 
 Summary:        Clear Containers Image
 Url:            https://download.clearlinux.org/
 Group:          image
-Source0:        clear-%{version}-containers.tar.xz
+Source0:        image-cc-%{version}-agent-%{agent_sha}-binaries.tar.gz
 Source1:        LICENSE
 
 %global debug_package %{nil}
@@ -13,19 +17,25 @@ Source1:        LICENSE
 %description
 Clear Containers Image
 
+%pre
+# Delete previous images if exists
+for f in /usr/share/clear-containers/*.img; do
+    rm -f "$f"
+done
+
 %prep
-tar -C %{_builddir} -xvJf %{_sourcedir}/clear-%{version}-containers.tar.xz
+tar -C %{_builddir} -xvf %{_sourcedir}/image-cc-%{version}-agent-%{agent_sha}-binaries.tar.gz
 
 %install
 ImageDir=%{buildroot}/usr/share/clear-containers
 mkdir -p ${ImageDir}
 
-install -p containers.img ${ImageDir}/clear-%{version}-containers.img
-ln -sf clear-%{version}-containers.img ${ImageDir}/clear-containers.img
+install -p image-cc-%{version}-agent-%{agent_sha}-binaries/cc-%{version}-agent-%{agent_sha}.img ${ImageDir}/cc-%{version}-agent-%{agent_sha}.img
+ln -sf cc-%{version}-agent-%{agent_sha}.img ${ImageDir}/clear-containers.img
 
 %files
 %if 0%{?suse_version}
 %dir /usr/share/clear-containers
 %endif
-/usr/share/clear-containers/clear-%{version}-containers.img
+/usr/share/clear-containers/cc-%{version}-agent-%{agent_sha}.img
 /usr/share/clear-containers/clear-containers.img

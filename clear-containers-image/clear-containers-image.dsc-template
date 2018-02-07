@@ -7,7 +7,7 @@ Maintainer: clear containers team <cc-devel@lists.01.org>
 Build-Depends: debhelper (>= 9), flex, bison
 Standards-Version: 3.9.6
 Homepage: https://clearlinux.org/features/clear-containers
-DEBTRANSFORM-TAR: clear-@VERSION@-containers.tar.xz
+DEBTRANSFORM-TAR: image-cc-@VERSION@-agent-@AGENT_SHA@-binaries.tar.gz
 
 Package: clear-containers-image
 Architecture: amd64

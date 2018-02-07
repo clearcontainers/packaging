@@ -10,6 +10,10 @@ set -e
 source ../versions.txt
 source ../scripts/pkglib.sh
 
+# get versions from clearcontainers/runtime repository
+runtime_versions_url="https://raw.githubusercontent.com/clearcontainers/runtime/master/versions.txt"
+source <(curl -sL "${runtime_versions_url}")
+
 SCRIPT_NAME=$0
 SCRIPT_DIR=$(dirname $0)
 PKG_NAME="clear-containers-image"
@@ -19,7 +23,7 @@ RELEASE=$(cat release)
 BUILD_DISTROS=(Fedora_26 xUbuntu_16.04)
 
 GENERATED_FILES=(clear-containers-image.spec clear-containers-image.dsc _service debian.rules)
-STATIC_FILES=(LICENSE debian.control debian.compat debian.changelog debian.dirs)
+STATIC_FILES=(LICENSE debian.control debian.compat debian.changelog debian.dirs debian.preinst)
 
 COMMIT=false
 BRANCH=false
@@ -39,10 +43,19 @@ function template()
 {
     sed -i s/"clear_vm_image_version=${clear_vm_image_version}"/"clear_vm_image_version=${VERSION}"/ ${SCRIPT_DIR}/../versions.txt
 
-    sed "s/\@VERSION\@/$VERSION/g; s/\@RELEASE\@/$RELEASE/g" clear-containers-image.spec-template > clear-containers-image.spec
-    sed "s/\@VERSION\@/$VERSION/g; s/\@RELEASE\@/$RELEASE/g" clear-containers-image.dsc-template > clear-containers-image.dsc
-    sed "s/\@VERSION\@/$VERSION/g" debian.rules-template > debian.rules
-    sed "s/@VERSION@/$VERSION/g" _service-template > _service
+    sed -e "s/\@VERSION\@/$VERSION/g" \
+        -e "s/\@RELEASE\@/$RELEASE/g" \
+        -e "s/@AGENT_SHA@/${cc_agent_version:0:6}/g" clear-containers-image.spec-template > clear-containers-image.spec
+
+    sed -e "s/\@VERSION\@/$VERSION/g" \
+        -e "s/\@RELEASE\@/$RELEASE/g" \
+        -e "s/@AGENT_SHA@/${cc_agent_version:0:6}/g" clear-containers-image.dsc-template > clear-containers-image.dsc
+
+    sed -e "s/\@VERSION\@/$VERSION/g" \
+        -e "s/@AGENT_SHA@/${cc_agent_version:0:6}/g" debian.rules-template > debian.rules
+
+    sed -e "s/@VERSION@/$VERSION/g" \
+        -e "s/@AGENT_SHA@/${cc_agent_version:0:6}/g" _service-template > _service
 }
 
 verify
@@ -66,4 +79,3 @@ then
 	obs_push $PKG_NAME
 fi
 echo "OBS working copy directory: ${OBS_WORKDIR}"
-
