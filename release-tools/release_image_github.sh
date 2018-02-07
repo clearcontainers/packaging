@@ -143,6 +143,8 @@ Usage: $0 [options] <subcommand>
 Script to build and publish an new Clear Containers Image.
 
 subcommands:
+	release
+	check-updated
 
 release: Create a new image
 
@@ -158,6 +160,7 @@ Options:
 -t <token>      : Github token to create new release. ENV: \$GITHUB_TOKEN
                   this option has higher priority than env variable
 EOT
+exit
 }
 
 while getopts a:c:hr:t:o:p opt
