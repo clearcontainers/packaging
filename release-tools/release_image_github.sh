@@ -145,6 +145,7 @@ Script to build and publish an new Clear Containers Image.
 subcommands:
 	release
 	check-updated
+	latest-version-url
 
 release: Create a new image
 
@@ -220,6 +221,16 @@ case "$subcmd" in
 			exit -1
 		fi
 		;;
+	latest-version-url)
+		tarball_url=$(get_image_tarball_url "${agent_version}" "${os_version}")
+		if curl -o /dev/null --silent --head --fail "$tarball_url"; then
+			echo "$tarball_url"
+			exit
+		else
+			echo "Image not updated use ${script_name} -p release"
+		fi
+		;;
+
 
 	*)
 		usage
