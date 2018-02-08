@@ -11,8 +11,14 @@ source ../versions.txt
 source ../scripts/pkglib.sh
 
 # get versions from clearcontainers/runtime repository
-runtime_versions_url="https://raw.githubusercontent.com/clearcontainers/runtime/master/versions.txt"
-source <(curl -sL "${runtime_versions_url}")
+latest_runtime_tag=$(curl -s https://github.com/clearcontainers/runtime/releases/latest | cut -d / -f8 | cut -d '"' -f1)
+if [ -n "$latest_runtime_tag" ] && [[ "$latest_runtime_tag" =~ ^[0-9]+\.[0-9]{0,2}+\.[0-9]{0,3}  ]]; then
+    runtime_versions_url="https://raw.githubusercontent.com/clearcontainers/runtime/${latest_runtime_tag}/versions.txt"
+    source <(curl -sL "${runtime_versions_url}")
+else
+    echo "Error getting the runtime's version"
+    exit 1
+fi
 
 SCRIPT_NAME=$0
 SCRIPT_DIR=$(dirname $0)
