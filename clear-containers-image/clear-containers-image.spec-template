@@ -17,12 +17,6 @@ Source1:        LICENSE
 %description
 Clear Containers Image
 
-%pre
-# Delete previous images if exists
-for f in /usr/share/clear-containers/*.img; do
-    rm -f "$f"
-done
-
 %prep
 tar -C %{_builddir} -xvf %{_sourcedir}/image-cc-%{version}-agent-%{agent_sha}-binaries.tar.gz
 
