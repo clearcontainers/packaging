@@ -1,3 +1,9 @@
+cc-runtime (3.0.19) stable; urgency=medium
+
+  * Update cc-runtime 3.0.19 900d623
+
+ -- Erick Cardona <erick.cardona.ruiz@intel.com>  Thu, 22 Feb 2018 18:19:04 +0000
+
 cc-runtime (3.0.18) stable; urgency=medium
 
   * Update cc-runtime 3.0.18 ee89afd
