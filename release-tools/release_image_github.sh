@@ -58,8 +58,8 @@ build_image() {
 	export USE_DOCKER=1
 	export WORKDIR="${workdir_builder}"
 
-	AGENT_VERSION="${agent_version}" OS_VERSION="${os_version}" make rootfs
-	make image
+	AGENT_VERSION="${agent_version}" OS_VERSION="${os_version}" sudo -E make rootfs
+	sudo -E make image
 }
 
 build_release_tool() {
