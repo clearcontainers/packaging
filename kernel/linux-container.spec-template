@@ -19,11 +19,19 @@ Source1:        config
 BuildRequires:  bash >= 2.03
 BuildRequires:  bc
 BuildRequires:  binutils-devel
+
 %if 0%{?rhel_version}
 BuildRequires:  elfutils-devel
-%else
+%endif
+
+%if 0%{?suse_version}
+BuildRequires:  libelf-devel
+%endif
+
+%if 0%{?fedora} || 0%{?centos_version}
 BuildRequires:  pkgconfig(libelf)
 %endif
+
 BuildRequires:  make >= 3.78
 BuildRequires:  openssl-devel
 BuildRequires:  flex
