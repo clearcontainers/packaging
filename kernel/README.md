@@ -15,7 +15,7 @@ packages.
   * linux-container.spec
   * lnux-container_X.X.XX-XX.dsc
 
-By default, the script will get the latest 4.9 longterm kernel version from
+By default, the script will get the latest 4.14 longterm kernel version from
 https://www.kernel.org. As an optional parameter you can pass any Linux
 ``VERSION`` to the script and it will generate the respective packages.
 
