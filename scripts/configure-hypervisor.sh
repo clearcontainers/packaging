@@ -68,24 +68,24 @@ EOT
 # Arguments:
 #
 # $1: *Name* of array variable (no leading '$'!!)
-# $2: any value (optional)
+# $2: (optional) "multi" - show values across multiple lines.
+#    Any other value results in the options being displayed on
+#    a single line.
 show_array()
 {
     local -n _array="$1"
-
-    local show_multi_line=no
-
-    [ -n "$2" ] && show_multi_line=yes
-
-    if [ "$show_multi_line" = no ]; then
-        echo "${_array[@]}"
-        return
-    fi
+    local action="$2"
 
     local -i size="${#_array[*]}"
     local -i i=1
     local suffix
     local elem
+
+    if [ "$action" = "multi" ]; then
+        echo "${_array[@]}"
+        return
+    fi
+
 
     for elem in "${_array[@]}"
     do
@@ -97,6 +97,7 @@ show_array()
         fi
 
         printf '%s%s\n' "$elem" "$suffix"
+
         i+=1
     done
 }
@@ -107,7 +108,7 @@ main()
     arch=$(arch)
 
     typeset -a qemu_options
-    multi_line=no
+    action=""
 
     while getopts "hm" opt
     do
@@ -118,7 +119,7 @@ main()
                 ;;
 
             m)
-                multi_line="yes"
+                action="multi"
                 ;;
         esac
     done
@@ -293,12 +294,7 @@ main()
     # Where to install data files
     qemu_options+=(--datadir=/usr/share/${hypervisor})
 
-    if [ "$multi_line" = yes ]
-    then
-        show_array qemu_options true
-    else
-        show_array qemu_options
-    fi
+    show_array qemu_options "$action"
 }
 
 main $@
