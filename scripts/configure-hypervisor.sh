@@ -104,6 +104,8 @@ show_array()
 # Entry point
 main()
 {
+    arch=$(arch)
+
     typeset -a qemu_options
     multi_line=no
 
@@ -232,7 +234,7 @@ main()
     # Other options
 
     # 64-bit only
-    qemu_options+=(--target-list=x86_64-softmmu)
+    [ "$arch" = x86_64 ] && qemu_options+=("--target-list=${arch}-softmmu")
 
     _qemu_cflags=""
 
@@ -283,7 +285,7 @@ main()
     unset _qemu_ldflags
 
     # Where to install qemu libraries
-    qemu_options+=(--libdir=/usr/lib64/${hypervisor})
+    [ "$arch" = x86_64 ] && qemu_options+=(--libdir=/usr/lib64/${hypervisor})
 
     # Where to install qemu helper binaries
     qemu_options+=(--libexecdir=/usr/libexec/${hypervisor})
