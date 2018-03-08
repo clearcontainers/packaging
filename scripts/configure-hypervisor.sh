@@ -26,6 +26,17 @@
 
 script_name=${0##*/}
 
+typeset -A recognised_tags
+
+recognised_tags=(
+    [arch]="architecture-specific"
+    [minimal]="specified to avoid building unnecessary elements"
+    [misc]="miscellaneous"
+    [security]="specified for security reasons"
+    [size]="minimise binary size"
+    [speed]="maximise startup speed"
+)
+
 # Display message to stderr and exit indicating script failed.
 die()
 {
@@ -49,6 +60,8 @@ Usage:
 
 Options:
 
+    -d : Dump all options along with the tags explaining why each option
+         is specified.
     -h : Display this help.
     -m : Display options one per line (includes continuation characters).
 
@@ -57,6 +70,57 @@ Example:
     $ $script_name qemu-lite
 
 EOT
+}
+
+show_tags_header()
+{
+	local keys
+	local key
+	local value
+
+	cat <<EOT
+# Recognised option tags:
+#
+EOT
+
+        # sort the tags
+	keys=${!recognised_tags[@]}
+	keys=$(echo "$keys"|tr ' ' '\n'|sort -u)
+
+	for key in $keys
+	do
+		value="${recognised_tags[$key]}"
+		printf "#    %s\t%s.\n" "$key" "$value"
+	done
+
+	printf "#\n\n"
+}
+
+check_tag()
+{
+	local tag="$1"
+	local entry="$2"
+
+	value="${recognised_tags[$tag]}"
+
+	[ -n "$value" ] && return
+
+	die "invalid tag '$tag' found for entry '$entry'"
+}
+
+check_tags()
+{
+	local tags="$1"
+	local entry="$2"
+
+        [ -z "$tags" ] && die "entry '$entry' doesn't have any tags"
+
+	tags=$(echo "$tags"|tr ',' '\n')
+
+	for tag in $tags
+	do
+		check_tag "$tag" "$entry"
+	done
 }
 
 # Display an array to stdout.
@@ -68,9 +132,9 @@ EOT
 # Arguments:
 #
 # $1: *Name* of array variable (no leading '$'!!)
-# $2: (optional) "multi" - show values across multiple lines.
-#    Any other value results in the options being displayed on
-#    a single line.
+# $2: (optional) "multi" - show values across multiple lines,
+#    "dump" - show full hash values. Any other value results in the
+#    options being displayed on a single line.
 show_array()
 {
     local -n _array="$1"
@@ -78,28 +142,43 @@ show_array()
 
     local -i size="${#_array[*]}"
     local -i i=1
-    local suffix
+    local entry
+    local tags
     local elem
+    local suffix
+    local one_line="no"
 
-    if [ "$action" = "multi" ]; then
-        echo "${_array[@]}"
-        return
-    fi
+    [ "$action" = "dump" ] && show_tags_header
 
-
-    for elem in "${_array[@]}"
+    for entry in "${_array[@]}"
     do
-        if [ $i -eq $size ]
-        then
-            suffix=""
-        else
-            suffix=" \\"
-        fi
+        tags=$(echo "$entry"|cut -s -d: -f1)
+        elem=$(echo "$entry"|cut -s -d: -f2-)
 
-        printf '%s%s\n' "$elem" "$suffix"
+	check_tags "$tags" "$entry"
+
+        if [ "$action" = "dump" ]
+        then
+            printf "%s\t\t%s\n" "$tags" "$elem"
+        elif [ "$action" = "multi" ]
+        then
+            if [ $i -eq $size ]
+            then
+                suffix=""
+            else
+                suffix=" \\"
+            fi
+
+            printf '%s%s\n' "$elem" "$suffix"
+        else
+            one_line="yes"
+            echo -n "$elem "
+        fi
 
         i+=1
     done
+
+    [ "$one_line" = yes ] && echo
 }
 
 # Entry point
@@ -107,12 +186,29 @@ main()
 {
     arch=$(arch)
 
+    # Array of configure options.
+    #
+    # Each element is comprised of two parts in the form:
+    #
+    #     tags:option
+    #
+    # Where,
+    #
+    # - 'tags' is a comma-separated list of values which denote why
+    #   the option is being specified.
+    #
+    # - 'option' is the hypervisor configuration option.
     typeset -a qemu_options
+
     action=""
 
-    while getopts "hm" opt
+    while getopts "dhm" opt
     do
         case "$opt" in
+            d)
+                action="dump"
+                ;;
+
             h)
                 usage
                 exit 0
@@ -133,109 +229,109 @@ main()
     # Disabled options
 
     # bluetooth support not required
-    qemu_options+=(--disable-bluez)
+    qemu_options+=(size:--disable-bluez)
 
     # braille support not required
-    qemu_options+=(--disable-brlapi)
+    qemu_options+=(size:--disable-brlapi)
 
     # Don't build documentation
-    qemu_options+=(--disable-docs)
+    qemu_options+=(minimal:--disable-docs)
 
     # Disable GUI (graphics)
-    qemu_options+=(--disable-curses)
-    qemu_options+=(--disable-gtk)
-    qemu_options+=(--disable-opengl)
-    qemu_options+=(--disable-sdl)
-    qemu_options+=(--disable-spice)
-    qemu_options+=(--disable-vte)
+    qemu_options+=(size:--disable-curses)
+    qemu_options+=(size:--disable-gtk)
+    qemu_options+=(size:--disable-opengl)
+    qemu_options+=(size:--disable-sdl)
+    qemu_options+=(size:--disable-spice)
+    qemu_options+=(size:--disable-vte)
 
     # Disable graphical network access
-    qemu_options+=(--disable-vnc)
-    qemu_options+=(--disable-vnc-jpeg)
-    qemu_options+=(--disable-vnc-png)
-    qemu_options+=(--disable-vnc-sasl)
+    qemu_options+=(size:--disable-vnc)
+    qemu_options+=(size:--disable-vnc-jpeg)
+    qemu_options+=(size:--disable-vnc-png)
+    qemu_options+=(size:--disable-vnc-sasl)
 
     # Disable unused filesystem support
-    qemu_options+=(--disable-fdt)
-    qemu_options+=(--disable-glusterfs)
-    qemu_options+=(--disable-libiscsi)
-    qemu_options+=(--disable-libnfs)
-    qemu_options+=(--disable-libssh2)
-    qemu_options+=(--disable-rbd)
+    qemu_options+=(size:--disable-fdt)
+    qemu_options+=(size:--disable-glusterfs)
+    qemu_options+=(size:--disable-libiscsi)
+    qemu_options+=(size:--disable-libnfs)
+    qemu_options+=(size:--disable-libssh2)
+    qemu_options+=(size:--disable-rbd)
 
     # Disable unused compression support
-    qemu_options+=(--disable-bzip2)
-    qemu_options+=(--disable-lzo)
-    qemu_options+=(--disable-snappy)
+    qemu_options+=(size:--disable-bzip2)
+    qemu_options+=(size:--disable-lzo)
+    qemu_options+=(size:--disable-snappy)
 
-    # SECURITY: Disable unused security options
-    qemu_options+=(--disable-seccomp)
-    qemu_options+=(--disable-tpm)
+    # Disable unused security options
+    qemu_options+=(security:--disable-seccomp)
+    qemu_options+=(security:--disable-tpm)
 
     # Disable userspace network access ("-net user")
-    qemu_options+=(--disable-slirp)
+    qemu_options+=(size:--disable-slirp)
 
     # Disable USB
-    qemu_options+=(--disable-libusb)
-    qemu_options+=(--disable-usb-redir)
+    qemu_options+=(size:--disable-libusb)
+    qemu_options+=(size:--disable-usb-redir)
 
-    # SECURITY: Don't build a static binary (lowers security)
-    qemu_options+=(--disable-static)
+    # Don't build a static binary (lowers security)
+    qemu_options+=(security:--disable-static)
 
     # Not required as "-uuid ..." is always passed to the qemu binary
-    qemu_options+=(--disable-uuid)
+    qemu_options+=(size:--disable-uuid)
 
     # Disable debug
-    qemu_options+=(--disable-debug-tcg)
-    qemu_options+=(--disable-qom-cast-debug)
-    qemu_options+=(--disable-tcg-interpreter)
-    qemu_options+=(--disable-tcmalloc)
+    qemu_options+=(size:--disable-debug-tcg)
+    qemu_options+=(size:--disable-qom-cast-debug)
+    qemu_options+=(size:--disable-tcg-interpreter)
+    qemu_options+=(size:--disable-tcmalloc)
 
-    # SECURITY: Disallow network downloads
-    qemu_options+=(--disable-curl)
+    # Disallow network downloads
+    qemu_options+=(security:--disable-curl)
 
     # Disable Remote Direct Memory Access (Live Migration)
     # https://wiki.qemu.org/index.php/Features/RDMALiveMigration
-    qemu_options+=(--disable-rdma)
+    qemu_options+=(size:--disable-rdma)
 
     # Don't build the qemu-io, qemu-nbd and qemu-image tools
-    qemu_options+=(--disable-tools)
+    qemu_options+=(size:--disable-tools)
 
     # Disable XEN driver
-    qemu_options+=(--disable-xen)
+    qemu_options+=(size:--disable-xen)
 
     # FIXME: why is this disabled?
     # (for reference, it's explicitly enabled in Ubuntu 17.10 and
     # implicitly enabled in Fedora 27).
-    qemu_options+=(--disable-linux-aio)
+    qemu_options+=(size:--disable-linux-aio)
 
     # In "passthrough" security mode
     # (-fsdev "...,security_model=passthrough,..."), qemu uses a helper
     # application called virtfs-proxy-helper(1) to make certain 9p
     # operations safer. We don't need that, so disable it (and it's
     # dependencies).
-    qemu_options+=(--disable-virtfs)
-    qemu_options+=(--disable-attr)
-    qemu_options+=(--disable-cap-ng)
+    qemu_options+=(size:--disable-virtfs)
+    qemu_options+=(size:--disable-attr)
+    qemu_options+=(size:--disable-cap-ng)
 
     #---------------------------------------------------------------------
     # Enabled options
 
     # Enable kernel Virtual Machine support.
     # This is the default, but be explicit to avoid any future surprises
-    qemu_options+=(--enable-kvm)
+    qemu_options+=(speed:--enable-kvm)
 
     # Required for fast network access
-    qemu_options+=(--enable-vhost-net)
+    qemu_options+=(speed:--enable-vhost-net)
 
     # Always strip binaries
-    qemu_options+=(--enable-strip)
+    qemu_options+=(size:--enable-strip)
 
     #---------------------------------------------------------------------
     # Other options
 
     # 64-bit only
-    [ "$arch" = x86_64 ] && qemu_options+=("--target-list=${arch}-softmmu")
+    [ "$arch" = x86_64 ] && qemu_options+=(arch:"--target-list=${arch}-softmmu")
 
     _qemu_cflags=""
 
@@ -259,7 +355,7 @@ main()
     _qemu_cflags+=" -fPIE"
 
     # Set compile options
-    qemu_options+=("--extra-cflags=\"${_qemu_cflags}\"")
+    qemu_options+=(security,speed,size:"--extra-cflags=\"${_qemu_cflags}\"")
 
     unset _qemu_cflags
 
@@ -281,20 +377,22 @@ main()
     # load.
     _qemu_ldflags+=" -z now"
 
-    qemu_options+=("--extra-ldflags=\"${_qemu_ldflags}\"")
+    qemu_options+=(security:"--extra-ldflags=\"${_qemu_ldflags}\"")
 
     unset _qemu_ldflags
 
     # Where to install qemu libraries
-    [ "$arch" = x86_64 ] && qemu_options+=(--libdir=/usr/lib64/${hypervisor})
+    [ "$arch" = x86_64 ] && qemu_options+=(arch:--libdir=/usr/lib64/${hypervisor})
 
     # Where to install qemu helper binaries
-    qemu_options+=(--libexecdir=/usr/libexec/${hypervisor})
+    qemu_options+=(misc:--libexecdir=/usr/libexec/${hypervisor})
 
     # Where to install data files
-    qemu_options+=(--datadir=/usr/share/${hypervisor})
+    qemu_options+=(misc:--datadir=/usr/share/${hypervisor})
 
     show_array qemu_options "$action"
+
+    exit 0
 }
 
 main $@
