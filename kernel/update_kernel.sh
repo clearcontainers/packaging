@@ -26,7 +26,7 @@ KR_REL=https://www.kernel.org/releases.json
 KR_SHA=https://cdn.kernel.org/pub/linux/kernel/v"${KR_SERIES}"/sha256sums.asc
 
 GENERATED_FILES=(linux-container.dsc linux-container.spec _service config)
-STATIC_FILES=(debian.dirs debian.rules debian.compat debian.control debian.copyright)
+STATIC_FILES=(debian.dirs debian.rules debian.compat debian.control debian.copyright debian.series)
 STATIC_FILES+=($KR_PATCHES)
 OBS_CC_KERNEL_REPO=${OBS_CC_KERNEL_REPO:-home:clearcontainers:clear-containers-3-staging/$PKG_NAME}
 
