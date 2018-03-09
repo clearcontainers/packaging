@@ -1,11 +1,11 @@
-cc_proxy_hash=318ac7e2e321b80c01f4b944a6c11a34550aad3a
-cc_runtime_hash=900d623d755c9ea9e220e5722286aed218c78e92
-cc_shim_hash=557fe9b2f84e119b98d19c7b7339acb5fb4b7790
+cc_proxy_hash=2d500edc813034b4a59a57bad72d55a36cc2e0da
+cc_runtime_hash=532740cc7cb859b33e7a80cfb250fbe2fd1e5899
+cc_shim_hash=c8f732c99484e947f18cf29ab0d3d26e3e6bfbfe
 qemu_lite_hash=d4a337fe919e4e147a721c2ff96313ce84b87c7b
 ksm_throttler_hash=fd007eac8165b6f1d0d053984f7fd4d5d60f6210
-cc_proxy_version=3.0.19
-cc_runtime_version=3.0.19
-cc_shim_version=3.0.19
+cc_proxy_version=3.0.21
+cc_runtime_version=3.0.21
+cc_shim_version=3.0.21
 clear_vm_kernel_version=4.14.22
 clear_vm_image_version=20640
 qemu_lite_version=2.7.1
@@ -22,18 +22,18 @@ go_checksum=de874549d9a8d8d8062be05808509c09a88a248e77ec14eb77453530829ac02b
 # should contain the new versions.
 
 # Fedora
-proxy_obs_fedora_version=3.0.19+git.318ac7e-24.1
-shim_obs_fedora_version=3.0.19+git.557fe9b-24.1
-image_obs_fedora_version=20640-47.1
+proxy_obs_fedora_version=3.0.21+git.2d500ed-25.1
+shim_obs_fedora_version=3.0.21+git.c8f732c-25.1
+image_obs_fedora_version=20640-48.1
 selinux_obs_fedora_version=0.1-5.1
-linux_container_obs_fedora_version=4.9.60-84.1
+linux_container_obs_fedora_version=4.14.22-86.1
 qemu_lite_obs_fedora_version=2.7.1+git.d4a337fe91-11.1
 
 # Ubuntu
-proxy_obs_ubuntu_version=3.0.19+git.318ac7e-24
-shim_obs_ubuntu_version=3.0.19+git.557fe9b-24
-image_obs_ubuntu_version=20640-47
-linux_container_obs_ubuntu_version=4.9.60-84
+proxy_obs_ubuntu_version=3.0.21+git.2d500ed-25
+shim_obs_ubuntu_version=3.0.21+git.c8f732c-25
+image_obs_ubuntu_version=20640-48
+linux_container_obs_ubuntu_version=4.14.22-86
 qemu_lite_obs_ubuntu_version=2.7.1+git.d4a337fe91-11
 
 # Current LTS Linux Kernel Version
