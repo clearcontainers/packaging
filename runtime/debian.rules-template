@@ -21,7 +21,7 @@ override_dh_auto_build:
 	ln -s /usr/src/packages/BUILD /usr/src/packages/BUILD/go/src/github.com/clearcontainers/runtime
 	cd $(GOPATH)/src/github.com/clearcontainers/runtime/; \
 	make PREFIX=/usr \
-		SYSCONFDIR=/usr/share/defaults \
+		SYSCONFDIR=/etc \
 		LOCALSTATEDIR=/var \
 		SHAREDIR=/usr/share \
 		VERSION=@VERSION@ \
