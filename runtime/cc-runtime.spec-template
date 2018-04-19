@@ -89,7 +89,7 @@ ln -s $HOME/rpmbuild/BUILD/cc-runtime-%{version} $HOME/rpmbuild/BUILD/go/src/%{I
 cd $HOME/rpmbuild/BUILD/go/src/%{IMPORTNAME}
 make PREFIX=/usr \
    LIBEXECDIR=%{LIBEXECDIR} \
-   SYSCONFDIR=/usr/share/defaults \
+   SYSCONFDIR=/etc \
    LOCALSTATEDIR=/var \
    SHAREDIR=/usr/share \
    VERSION=@VERSION@ \
