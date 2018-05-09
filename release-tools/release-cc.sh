@@ -78,6 +78,7 @@ function release(){
 	for repo in "${repos[@]}"; do
 		echo "Release ${repo}"
 		echo ${release_tool} --owner "${owner}" release --version "${clearcontainers_version}" "${repo}"
+		${release_tool} --owner "${owner}" release --version "${clearcontainers_version}" "${repo}"
 	done
 }
 
